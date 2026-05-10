@@ -1,0 +1,1653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>My Full Stack Roadmap</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --red:    #ef4444; --red-l:  #fef2f2; --red-b:  #fee2e2;
+  --blue:   #3b82f6; --blue-l: #eff6ff; --blue-b: #dbeafe;
+  --green:  #22c55e; --green-l:#f0fdf4; --green-b:#dcfce7;
+  --rose:   #e11d48; --rose-l: #fff1f2; --rose-b: #ffe4e6;
+  --sky:    #0ea5e9; --sky-l:  #f0f9ff; --sky-b:  #e0f2fe;
+  
+  --bg:     #f9fafb; --card:   #ffffff; --border: #e5e7eb;
+  --text:   #1f2937; --muted:  #4b5563; --subtle: #9ca3af; --faint: #f3f4f6;
+  --mono: 'JetBrains Mono', monospace; --sans: 'DM Sans', sans-serif; --display: 'Syne', sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* ─── ANIMATED BACKGROUND ─── */
+.bg-animation { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+.orb { position: absolute; border-radius: 50%; filter: blur(80px); will-change: transform; }
+.orb-1 { width: 420px; height: 420px; background: radial-gradient(circle, rgba(59,130,246,.20), transparent 70%); top: -100px; left: -100px; animation: float1 20s ease-in-out infinite; }
+.orb-2 { width: 380px; height: 380px; background: radial-gradient(circle, rgba(34,197,94,.18), transparent 70%); bottom: -80px; right: -80px; animation: float2 24s ease-in-out infinite; }
+.orb-3 { width: 320px; height: 320px; background: radial-gradient(circle, rgba(14,165,233,.16), transparent 70%); top: 40%; right: -60px; animation: float3 28s ease-in-out infinite; }
+.orb-4 { width: 300px; height: 300px; background: radial-gradient(circle, rgba(59,130,246,.15), transparent 70%); bottom: 10%; left: 5%; animation: float4 26s ease-in-out infinite; }
+
+@keyframes float1 { 0%,100% { transform: translate(0, 0) scale(1) } 25% { transform: translate(30px, -40px) scale(1.05) } 50% { transform: translate(-20px, 30px) scale(0.95) } 75% { transform: translate(40px, 20px) scale(1.02) } }
+@keyframes float2 { 0%,100% { transform: translate(0, 0) scale(1) } 25% { transform: translate(-35px, 25px) scale(0.98) } 50% { transform: translate(25px, -35px) scale(1.04) } 75% { transform: translate(-25px, -20px) scale(1) } }
+@keyframes float3 { 0%,100% { transform: translate(0, 0) scale(1) } 33% { transform: translate(-30px, 35px) scale(1.03) } 66% { transform: translate(35px, -25px) scale(0.97) } }
+@keyframes float4 { 0%,100% { transform: translate(0, 0) scale(1) } 33% { transform: translate(25px, -25px) scale(0.99) } 66% { transform: translate(-30px, 30px) scale(1.03) } }
+
+/* ─── FLOATING ASTEROIDS WITH GEOMETRY ─── */
+.asteroids-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; z-index: 1; pointer-events: none; }
+.asteroid { position: absolute; will-change: transform; }
+.asteroid svg { width: 100%; height: 100%; filter: drop-shadow(0 0 2px rgba(255,255,255,0.3)); }
+
+.connector-line { position: absolute; stroke: rgba(255,255,255,0.15); stroke-width: 1; pointer-events: none; }
+
+/* Random drift animations - multi-directional */
+@keyframes float-drift-1 { 
+  0% { transform: translate(var(--sx, 0), var(--sy, 0)) rotate(0deg); opacity: 0.6; }
+  50% { opacity: 0.9; }
+  100% { transform: translate(var(--ex, 100px), var(--ey, -100px)) rotate(360deg); opacity: 0.2; }
+}
+@keyframes float-drift-2 { 
+  0% { transform: translate(var(--sx, 0), var(--sy, 0)) rotate(45deg); opacity: 0.7; }
+  50% { opacity: 0.85; }
+  100% { transform: translate(var(--ex, 100px), var(--ey, -100px)) rotate(405deg); opacity: 0.1; }
+}
+@keyframes float-drift-3 { 
+  0% { transform: translate(var(--sx, 0), var(--sy, 0)) rotate(90deg); opacity: 0.65; }
+  50% { opacity: 0.88; }
+  100% { transform: translate(var(--ex, 100px), var(--ey, -100px)) rotate(450deg); opacity: 0.15; }
+}
+@keyframes float-drift-4 { 
+  0% { transform: translate(var(--sx, 0), var(--sy, 0)) rotate(180deg); opacity: 0.75; }
+  50% { opacity: 0.9; }
+  100% { transform: translate(var(--ex, 100px), var(--ey, -100px)) rotate(540deg); opacity: 0.2; }
+}
+@keyframes float-drift-5 { 
+  0% { transform: translate(var(--sx, 0), var(--sy, 0)) rotate(270deg); opacity: 0.68; }
+  50% { opacity: 0.87; }
+  100% { transform: translate(var(--ex, 100px), var(--ey, -100px)) rotate(630deg); opacity: 0.12; }
+}
+@keyframes float-drift-6 { 
+  0% { transform: translate(var(--sx, 0), var(--sy, 0)) rotate(315deg); opacity: 0.72; }
+  50% { opacity: 0.89; }
+  100% { transform: translate(var(--ex, 100px), var(--ey, -100px)) rotate(675deg); opacity: 0.18; }
+}
+@keyframes float-drift-7 { 
+  0% { transform: translate(var(--sx, 0), var(--sy, 0)) rotate(135deg); opacity: 0.7; }
+  50% { opacity: 0.86; }
+  100% { transform: translate(var(--ex, 100px), var(--ey, -100px)) rotate(495deg); opacity: 0.14; }
+}
+@keyframes float-drift-8 { 
+  0% { transform: translate(var(--sx, 0), var(--sy, 0)) rotate(225deg); opacity: 0.74; }
+  50% { opacity: 0.91; }
+  100% { transform: translate(var(--ex, 100px), var(--ey, -100px)) rotate(585deg); opacity: 0.19; }
+}
+@keyframes float-drift-9 { 
+  0% { transform: translate(var(--sx, 0), var(--sy, 0)) rotate(60deg); opacity: 0.69; }
+  50% { opacity: 0.84; }
+  100% { transform: translate(var(--ex, 100px), var(--ey, -100px)) rotate(420deg); opacity: 0.16; }
+}
+@keyframes float-drift-10 { 
+  0% { transform: translate(var(--sx, 0), var(--sy, 0)) rotate(240deg); opacity: 0.71; }
+  50% { opacity: 0.88; }
+  100% { transform: translate(var(--ex, 100px), var(--ey, -100px)) rotate(600deg); opacity: 0.17; }
+}
+
+.asteroid-1 { animation: float-drift-1 14s linear infinite; --sx: -80px; --sy: 120vh; --ex: 150px; --ey: -150px; }
+.asteroid-2 { animation: float-drift-2 16s linear infinite; --sx: 200px; --sy: 130vh; --ex: -100px; --ey: -160px; }
+.asteroid-3 { animation: float-drift-3 13s linear infinite; --sx: 50vw; --sy: 140vh; --ex: 30vw; --ey: -180px; }
+.asteroid-4 { animation: float-drift-4 15s linear infinite; --sx: -120px; --sy: 110vh; --ex: 200px; --ey: -140px; }
+.asteroid-5 { animation: float-drift-5 17s linear infinite; --sx: 30vw; --sy: 150vh; --ex: 70vw; --ey: -200px; }
+.asteroid-6 { animation: float-drift-6 14.5s linear infinite; --sx: 80vw; --sy: 125vh; --ex: 20vw; --ey: -170px; }
+.asteroid-7 { animation: float-drift-7 15.5s linear infinite; --sx: -100px; --sy: 135vh; --ex: 180px; --ey: -190px; }
+.asteroid-8 { animation: float-drift-8 16.5s linear infinite; --sx: 90vw; --sy: 115vh; --ex: 10vw; --ey: -150px; }
+.asteroid-9 { animation: float-drift-9 13.5s linear infinite; --sx: 60vw; --sy: 145vh; --ex: 15vw; --ey: -175px; }
+.asteroid-10 { animation: float-drift-10 14.5s linear infinite; --sx: 10vw; --sy: 120vh; --ex: 85vw; --ey: -165px; }
+
+/* ─── CELEBRATION POPUPS ─── */
+@keyframes popIn { 
+  0% { transform: scale(0) translateY(20px); opacity: 0; }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+@keyframes popOut {
+  0% { transform: scale(1) translateY(0); opacity: 1; }
+  100% { transform: scale(0.5) translateY(-40px); opacity: 0; }
+}
+@keyframes floatUp {
+  0% { transform: translateY(0); opacity: 1; }
+  100% { transform: translateY(-60px); opacity: 0; }
+}
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+@keyframes rotateEmoji {
+  0% { transform: rotateZ(0deg) scale(1); }
+  50% { transform: rotateZ(10deg) scale(1.1); }
+  100% { transform: rotateZ(0deg) scale(1); }
+}
+@keyframes particleFloat {
+  0% { transform: translateY(0) translateX(0) scale(1); opacity: 1; }
+  100% { transform: translateY(-100px) translateX(var(--tx, 0px)) scale(0); opacity: 0; }
+}
+@keyframes shineEffect {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+@keyframes glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(255,255,255,0.5), inset 0 0 20px rgba(255,255,255,0.1); }
+  50% { box-shadow: 0 0 40px rgba(255,255,255,0.8), inset 0 0 30px rgba(255,255,255,0.3); }
+}
+
+.celebration-popup {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+  pointer-events: none;
+  font-family: var(--display);
+  font-weight: 700;
+  text-align: center;
+  line-height: 1.4;
+  animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards, popOut 0.5s ease-in 3.2s forwards, glow 2.5s ease-in-out infinite 0.5s;
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(20px);
+  padding: 32px 48px;
+  border-radius: 24px;
+  border: 2px solid;
+  box-shadow: 0 20px 80px rgba(0,0,0,0.25);
+  max-width: 90%;
+  min-width: 280px;
+  overflow: hidden;
+}
+
+.celebration-popup::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  animation: shineEffect 2s ease-in-out 0.5s;
+  pointer-events: none;
+}
+
+.celebration-popup.success { border-color: var(--green); color: var(--green); }
+.celebration-popup.project { border-color: var(--blue); color: var(--blue); }
+.celebration-popup.topic { border-color: var(--sky); color: var(--sky); }
+
+.celebration-popup .emoji {
+  font-size: 72px;
+  display: block;
+  margin-bottom: 16px;
+  animation: rotateEmoji 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55), floatUp 3.2s ease-out 0.8s forwards;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));
+}
+
+.celebration-popup .title {
+  font-size: 32px;
+  margin-bottom: 8px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  animation: pulse 2s ease-in-out 0.5s infinite;
+}
+
+.celebration-popup .item-name {
+  font-size: 18px;
+  font-family: var(--sans);
+  font-weight: 600;
+  margin-top: 12px;
+  color: var(--text);
+  opacity: 0.9;
+}
+
+.celebration-popup .achievement-meta {
+  font-size: 13px;
+  font-family: var(--mono);
+  color: var(--muted);
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(0,0,0,0.1);
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.achievement-meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.achievement-meta .badge {
+  background: rgba(0,0,0,0.05);
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.particles-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9998;
+  pointer-events: none;
+}
+
+.particle {
+  position: absolute;
+  pointer-events: none;
+}
+
+.particle::before {
+  content: '';
+  display: block;
+  border-radius: 50%;
+  animation: particleFloat 2.5s ease-out forwards;
+}
+h1, h2, h3, h4 { font-family: var(--display); }
+
+/* ─── LAYOUT ─── */
+.container { max-width: 840px; margin: 0 auto; padding: 0 20px; position: relative; z-index: 1; }
+.mono { font-family: var(--mono); }
+.label { font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--subtle); }
+.tag { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 6px; font-family: var(--mono); font-size: 10px; font-weight: 700; letter-spacing: .05em; white-space: nowrap; border: 1px solid transparent; }
+
+/* ─── HERO ─── */
+.hero { padding: 72px 20px 56px; text-align: center; position: relative; z-index: 1; animation: fadeDown .7s ease both; }
+.hero h1 { font-size: clamp(32px, 6vw, 56px); font-weight: 800; letter-spacing: -1.5px; line-height: 1.1; margin-bottom: 18px; animation: fadeUp .6s .1s ease both; }
+.hero h1 .line1 { color: var(--text); display: block; }
+.hero h1 .grad { background: linear-gradient(135deg, var(--text), var(--muted)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; display: block; }
+.hero p { color: var(--muted); font-size: 16px; max-width: 540px; margin: 0 auto 36px; line-height: 1.6; animation: fadeUp .6s .15s ease both; }
+.hero-stats { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; animation: fadeUp .6s .2s ease both; }
+.stat-card { background: var(--card); border: 1px solid var(--border); box-shadow: 0 1px 3px rgba(0,0,0,.02); border-radius: 12px; padding: 14px 20px; text-align: center; transition: transform .2s, box-shadow .2s; }
+.stat-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.04); }
+.stat-card .val { font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+.stat-card .lbl { font-family: var(--mono); font-size: 11px; color: var(--subtle); }
+
+/* ─── PROGRESS ─── */
+.progress-wrap { background: rgba(255,255,255,.85); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; position: sticky; top: 0; z-index: 50; box-shadow: 0 4px 20px rgba(0,0,0,.02); }
+.progress-top { display: flex; justify-content: space-between; align-items: center; }
+.progress-title { font-family: var(--mono); font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--text); }
+.progress-pct { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--green); }
+.progress-track { height: 6px; background: var(--bg); border-radius: 6px; overflow: hidden; border: 1px solid var(--border); margin-top: 12px; }
+.progress-fill { 
+  height: 100%; 
+  background-color: var(--text); 
+  background-image: linear-gradient(45deg, rgba(255,255,255,.15) 25%, transparent 25%, transparent 50%, rgba(255,255,255,.15) 50%, rgba(255,255,255,.15) 75%, transparent 75%, transparent);
+  background-size: 1rem 1rem;
+  border-radius: 6px; 
+  transition: width .6s cubic-bezier(.4,0,.2,1); 
+  animation: progressStripes 1s linear infinite;
+}
+.progress-phases { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+.prog-phase { flex:1; min-width: 120px; background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; display: flex; align-items: center; gap: 8px; transition: all .3s; }
+.prog-phase.done { border-color: var(--green); background: var(--green-l); }
+.prog-phase .ph-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border); flex-shrink: 0; transition: all .3s; }
+.prog-phase.done .ph-dot { background: var(--green); box-shadow: 0 0 0 3px var(--green-b); }
+.prog-phase span { font-family: var(--sans); font-size: 11px; color: var(--muted); font-weight: 600; }
+.prog-phase.done span { color: var(--green); }
+
+/* ─── SECTION HEADER ─── */
+.sec-header { margin-bottom: 28px; }
+.sec-header h2 { font-size: 26px; font-weight: 800; letter-spacing: -.5px; color: var(--text); margin: 6px 0 8px; }
+.sec-header p { font-size: 15px; color: var(--muted); line-height: 1.6; }
+
+/* ─── SPINE ─── */
+.phase-row { display: flex; gap: 16px; opacity: 0; transform: translateY(20px); transition: opacity .5s ease, transform .5s ease; margin-bottom: 24px; }
+.phase-row.visible { opacity: 1; transform: translateY(0); }
+.spine { display: flex; flex-direction: column; align-items: center; width: 44px; flex-shrink: 0; padding-top: 12px; }
+.phase-btn { width: 38px; height: 38px; border-radius: 50%; border: 2px solid; cursor: pointer; font-family: var(--mono); font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all .3s; background: var(--card); box-shadow: 0 2px 6px rgba(0,0,0,.04); }
+.phase-btn:hover { transform: scale(1.05); box-shadow: 0 4px 12px rgba(0,0,0,.08); }
+.spine-line { width: 2px; flex: 1; min-height: 32px; margin: 12px 0; background: var(--border); transition: background .5s; }
+
+/* ─── PHASE CARD ─── */
+.phase-body { flex: 1; min-width: 0; }
+.phase-card { border: 1px solid var(--border); border-radius: 16px; overflow: hidden; background: var(--card); box-shadow: 0 4px 20px rgba(0,0,0,.03); transition: box-shadow .25s, transform .2s; }
+.phase-card:hover { box-shadow: 0 12px 32px rgba(0,0,0,.06); transform: translateY(-2px); }
+.phase-header { padding: 24px; cursor: pointer; user-select: none; transition: background .15s; }
+.phase-header:hover { background: var(--bg); }
+.phase-meta { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+.phase-num { font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--subtle); }
+.phase-header h3 { font-size: 22px; font-weight: 800; letter-spacing: -.5px; color: var(--text); margin-bottom: 4px; }
+.phase-header .sub { font-size: 14px; color: var(--muted); font-weight: 500; }
+.phase-header .overview { font-size: 14px; color: var(--muted); line-height: 1.6; margin-top: 14px; }
+.ph-right { display: flex; flex-direction: column; align-items: flex-end; gap: 10px; flex-shrink: 0; }
+.diff-dots { display: flex; gap: 4px; }
+.diff-dot { width: 8px; height: 8px; border-radius: 50%; }
+.chevron { font-size: 16px; color: var(--subtle); transition: transform .25s; display: inline-block; }
+
+/* ─── TABS ─── */
+.tabs { display: flex; background: var(--bg); border-radius: 12px; padding: 4px; border: 1px solid var(--border); margin: 0 24px 20px; overflow-x: auto; scrollbar-width: none; }
+.tabs::-webkit-scrollbar { display: none; }
+.tab-btn { flex: 1; min-width: 100px; padding: 10px 12px; border-radius: 8px; border: none; cursor: pointer; background: transparent; font-family: var(--sans); font-size: 13px; font-weight: 600; color: var(--muted); transition: all .2s; white-space: nowrap; }
+.tab-btn.active { background: var(--card); color: var(--text); box-shadow: 0 2px 8px rgba(0,0,0,.05); border: 1px solid var(--border); }
+.tab-content { padding: 0 24px 24px; }
+
+/* ─── TOPIC ROW ─── */
+.topic-row { border: 1px solid var(--border); border-radius: 12px; margin-bottom: 12px; overflow: hidden; background: var(--card); transition: box-shadow .2s; }
+.topic-row:hover { box-shadow: 0 4px 12px rgba(0,0,0,.03); }
+.topic-hdr { display: flex; justify-content: space-between; align-items: center; padding: 16px; cursor: pointer; background: transparent; border: none; width: 100%; text-align: left; transition: background .15s; }
+.topic-hdr:hover { background: var(--bg); }
+.topic-name { font-size: 14px; font-weight: 600; color: var(--text); margin-right: 12px; }
+.topic-time { font-family: var(--sans); font-size: 12px; font-weight: 500; color: var(--subtle); }
+.topic-body { padding: 16px; border-top: 1px solid var(--border); animation: fadeUp .2s ease both; background: var(--bg); }
+.topic-section-label { font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; margin: 0 0 10px; color: var(--text); }
+.topic-list { list-style: none; padding: 0; margin: 0 0 16px; }
+.topic-list li { font-size: 14px; line-height: 1.7; padding-left: 20px; position: relative; color: var(--text); margin-bottom: 6px; }
+.topic-list li::before { content: '→'; position: absolute; left: 0; font-size: 14px; top: 0; color: var(--subtle); }
+.topic-list.opt li { color: var(--muted); }
+.topic-list.opt li::before { color: var(--border); }
+
+/* ─── BIG PROJECT CARD ─── */
+.big-project-card { border-radius: 16px; padding: 24px; margin-bottom: 16px; border: 1px solid var(--border); background: var(--card); transition: transform .2s, box-shadow .2s; }
+.big-project-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.06); }
+.big-label { display: inline-flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; padding: 4px 12px; border-radius: 6px; margin-bottom: 12px; background: var(--text); color: var(--card); }
+.big-project-card h4 { font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 8px; letter-spacing: -.2px; }
+.big-project-card p { font-size: 14px; color: var(--muted); line-height: 1.6; margin: 0; }
+.big-skills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.big-skill { background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 4px 10px; font-family: var(--sans); font-size: 12px; font-weight: 500; color: var(--muted); }
+
+/* ─── BONUS PROJECT CARD ─── */
+.project-card { border-radius: 12px; border: 1px solid var(--border); padding: 18px; margin-bottom: 12px; background: var(--card); transition: box-shadow .2s; }
+.project-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,.04); }
+.project-card h4 { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+.project-card p { font-size: 13px; color: var(--muted); line-height: 1.6; margin: 0; }
+
+/* ─── MINI PROJECTS ─── */
+.mini-header { display: flex; align-items: center; gap: 12px; margin: 24px 0 16px; }
+.mini-header-line { flex: 1; height: 1px; background: var(--border); }
+.mini-header span { font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--subtle); white-space: nowrap; }
+.minis-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; margin-bottom: 20px; }
+.mini-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px; transition: transform .2s, box-shadow .2s; }
+.mini-card:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,.05); }
+.mini-card .mini-name { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+.mini-card .mini-desc { font-size: 13px; color: var(--muted); line-height: 1.5; }
+.mini-badge { display: inline-block; font-family: var(--mono); font-size: 10px; font-weight: 600; padding: 3px 8px; border-radius: 4px; margin-bottom: 10px; background: var(--bg); color: var(--muted); }
+
+/* ─── READINESS ─── */
+.ready-box { background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+.ready-item { font-size: 14px; color: var(--text); line-height: 1.6; padding-left: 24px; position: relative; margin: 8px 0; }
+.ready-item::before { content: '✓'; position: absolute; left: 0; font-size: 14px; font-weight: 700; color: var(--green); }
+
+/* ─── AI TAB ─── */
+.ai-card { border-radius: 12px; border: 1px solid var(--border); padding: 20px; margin-bottom: 16px; background: var(--card); }
+.ai-rule-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; margin-top: 12px; }
+.ai-rule { border: 1px solid var(--border); border-radius: 12px; padding: 16px; background: var(--card); box-shadow: 0 2px 8px rgba(0,0,0,.02); }
+.ai-rule .ph { font-family: var(--sans); font-size: 12px; font-weight: 600; margin-bottom: 6px; color: var(--text); }
+.ai-rule p { font-size: 13px; color: var(--muted); line-height: 1.6; margin: 0; }
+
+/* ─── MISTAKE TAB ─── */
+.mistake-item { background: var(--card); border: 1px solid var(--border); border-left: 3px solid var(--red); border-radius: 8px; padding: 12px 16px; margin-bottom: 8px; font-size: 14px; color: var(--text); line-height: 1.6; }
+.avoid-item { font-size: 14px; color: var(--muted); padding-left: 20px; position: relative; margin: 8px 0; }
+.avoid-item::before { content: '✕'; position: absolute; left: 0; color: var(--red); font-size: 12px; top: 2px; }
+
+/* ─── MILESTONE ─── */
+.milestone { margin-left: 60px; margin-bottom: 32px; border-radius: 16px; padding: 20px 24px; border: 1px solid var(--border); background: var(--card); opacity: 0; transform: translateX(-10px); transition: opacity .5s ease .1s, transform .5s ease .1s; box-shadow: 0 4px 16px rgba(0,0,0,.03); }
+.milestone.visible { opacity: 1; transform: translateX(0); }
+.milestone-top { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+.milestone-emoji { font-size: 24px; display: inline-block; animation: bounceEmoji 3s ease-in-out infinite; }
+.milestone-title { font-family: var(--sans); font-size: 12px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; color: var(--subtle); }
+.can-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+.can-tag { border-radius: 6px; padding: 4px 12px; font-size: 13px; font-weight: 500; border: 1px solid var(--border); background: var(--bg); color: var(--text); }
+.milestone-next { font-size: 13px; color: var(--text); margin-bottom: 6px; }
+.milestone-gig { font-size: 13px; color: var(--muted); }
+
+/* ─── AI TOOLS GRID ─── */
+.ai-tools-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px; }
+.ai-tool-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 20px; transition: transform .2s, box-shadow .2s; }
+.ai-tool-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.05); }
+.ai-tool-card .name-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.ai-tool-card .tname { font-size: 16px; font-weight: 700; color: var(--text); }
+.hot-badge { background: var(--red-l); border: 1px solid var(--red-b); border-radius: 6px; padding: 2px 8px; font-family: var(--mono); font-size: 10px; color: var(--red); font-weight: 600; }
+.ai-tool-card p { font-size: 14px; color: var(--muted); line-height: 1.6; margin: 12px 0 0; }
+
+/* ─── CAREER ─── */
+.career-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+.career-card { border: 1px solid var(--border); border-radius: 16px; padding: 24px; background: var(--card); transition: transform .2s, box-shadow .2s; }
+.career-card:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(0,0,0,.06); }
+.career-card .cc-top { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.career-card .cc-emoji { font-size: 26px; }
+.career-card .cc-title { font-size: 16px; font-weight: 700; color: var(--text); }
+.career-card .cc-from { font-family: var(--sans); font-size: 12px; font-weight: 500; color: var(--subtle); }
+.career-card p { font-size: 14px; color: var(--muted); line-height: 1.6; margin-bottom: 16px; }
+.career-stage { font-size: 13px; color: var(--text); padding-left: 16px; position: relative; margin: 6px 0; }
+.career-stage::before { content: '→'; position: absolute; left: 0; font-size: 12px; top: 1px; color: var(--subtle); }
+.platform-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.platform-chip { background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 4px 10px; font-family: var(--sans); font-size: 11px; font-weight: 500; color: var(--muted); }
+
+/* ─── WARNINGS ─── */
+.warn-item { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px 20px; margin-bottom: 12px; display: flex; gap: 16px; align-items: flex-start; transition: box-shadow .2s; }
+.warn-item:hover { box-shadow: 0 4px 16px rgba(0,0,0,.04); }
+.warn-item p { font-size: 14px; color: var(--text); line-height: 1.6; margin: 0; flex: 1; }
+
+/* ─── JOURNAL ─── */
+.journal-section { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 32px; margin-bottom: 48px; box-shadow: 0 4px 24px rgba(0,0,0,.02); }
+.journal-section h2 { font-size: 24px; font-weight: 800; letter-spacing: -.5px; color: var(--text); margin: 6px 0 8px; }
+.journal-section > p { font-size: 15px; color: var(--muted); margin-bottom: 24px; }
+.journal-phase { margin-bottom: 16px; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; background: var(--card); transition: box-shadow .2s; }
+.journal-phase:hover { box-shadow: 0 4px 16px rgba(0,0,0,.03); }
+.journal-phase-hdr { padding: 16px 20px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; user-select: none; transition: background .15s; background: var(--bg); }
+.journal-phase-hdr:hover { background: var(--border); }
+.journal-phase-hdr .jph-title { font-size: 15px; font-weight: 600; color: var(--text); }
+.journal-phase-body { padding: 20px; border-top: 1px solid var(--border); display: none; animation: fadeUp .2s ease both; }
+.journal-phase-body.open { display: block; }
+.jnl-date { font-family: var(--sans); font-size: 12px; font-weight: 500; color: var(--subtle); margin-bottom: 12px; }
+.jnl-textarea { width: 100%; min-height: 140px; border: 1px solid var(--border); border-radius: 12px; padding: 16px; font-family: var(--sans); font-size: 14px; color: var(--text); background: var(--bg); resize: vertical; outline: none; line-height: 1.6; transition: border-color .2s, box-shadow .2s; }
+.jnl-textarea:focus { border-color: var(--blue); background: var(--card); box-shadow: 0 0 0 4px var(--blue-l); }
+.jnl-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 16px; }
+.jnl-save-btn { background: var(--text); color: var(--card); border: none; border-radius: 8px; padding: 10px 20px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: var(--sans); transition: all .2s; }
+.jnl-save-btn:hover { background: var(--muted); transform: translateY(-1px); }
+.jnl-clear-btn { background: none; border: 1px solid var(--border); border-radius: 8px; padding: 10px 16px; font-size: 13px; font-weight: 500; color: var(--muted); cursor: pointer; font-family: var(--sans); transition: all .2s; }
+.jnl-clear-btn:hover { border-color: var(--red); color: var(--red); background: var(--red-l); }
+.jnl-saved-msg { font-family: var(--sans); font-size: 13px; font-weight: 500; color: var(--green); opacity: 0; transition: opacity .3s; }
+.jnl-saved-msg.show { opacity: 1; }
+
+/* ─── JOURNEY BOX ─── */
+.journey-box { background: var(--bg); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin-top: 32px; }
+.journey-box h3 { font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+.journey-box .jb-sub { font-size: 14px; color: var(--muted); margin-bottom: 16px; }
+.journey-textarea { width: 100%; min-height: 180px; border: 1px solid var(--border); border-radius: 12px; padding: 16px; font-family: var(--sans); font-size: 14px; color: var(--text); background: var(--card); resize: vertical; outline: none; line-height: 1.6; transition: border-color .2s, box-shadow .2s; }
+.journey-textarea:focus { border-color: var(--blue); box-shadow: 0 0 0 4px var(--blue-l); }
+.journey-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 16px; flex-wrap: wrap; gap: 12px; }
+.journey-save-btn { background: var(--text); color: var(--card); border: none; border-radius: 8px; padding: 10px 24px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: var(--sans); transition: all .2s; }
+.journey-save-btn:hover { background: var(--muted); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,.08); }
+
+/* ─── BOTTOM NOTE ─── */
+.bottom-note { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 28px 32px; text-align: center; }
+.bottom-note p { font-size: 15px; color: var(--text); line-height: 1.6; margin: 0 0 12px; }
+.bottom-note .note { font-family: var(--sans); font-size: 13px; color: var(--subtle); margin: 0; }
+
+/* ─── KEYFRAMES ─── */
+@keyframes fadeUp   { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+@keyframes fadeDown { from{opacity:0;transform:translateY(-12px)} to{opacity:1;transform:translateY(0)} }
+@keyframes bounceEmoji { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)} }
+@keyframes progressStripes { from { background-position: 1rem 0; } to { background-position: 0 0; } }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 720px) {
+  .container { padding: 0 16px; }
+  .hero { padding: 48px 16px 40px; }
+  .hero p { font-size: 15px; max-width: 100%; margin-bottom: 24px; }
+  .hero-stats { justify-content: center; gap: 8px; flex-direction: column; }
+  .stat-card { width: 100%; padding: 16px; }
+  .hero h1 { font-size: clamp(28px, 10vw, 44px); }
+
+  .progress-wrap { padding: 12px 16px; }
+  .progress-phases { display: none; }
+
+  .tabs { flex-wrap: nowrap; overflow-x: auto; margin: 0 16px 20px; padding: 4px; }
+  .tab-btn { font-size: 12px; padding: 10px; }
+  .tab-content { padding: 0 16px 20px; }
+
+  .phase-row { flex-direction: column; gap: 12px; }
+  .spine { width: 100%; flex-direction: row; align-items: center; gap: 12px; padding-top: 0; }
+  .spine-line { width: 100%; height: 2px; min-height: 2px; margin: 0; }
+  
+  .phase-card { border-radius: 12px; }
+  .phase-header { padding: 20px 16px; }
+  .ph-right { align-items: flex-start; margin-left: 0; }
+
+  .topic-row { border-radius: 12px; }
+  .topic-hdr { padding: 14px 16px; }
+  .topic-body { padding: 16px; }
+
+  .journal-section { padding: 20px 16px; }
+  .journal-phase-hdr { padding: 14px 16px; }
+  .journal-phase-body { padding: 16px; }
+  .journey-actions { flex-direction: column; align-items: stretch; gap: 12px; }
+  .journey-save-btn { width: 100%; }
+
+  .milestone { margin-left: 0; padding: 16px; }
+  .big-project-card { padding: 20px 16px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ANIMATED BACKGROUND -->
+<div class="bg-animation">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <div class="orb orb-4"></div>
+</div>
+
+<!-- FLOATING ASTEROIDS WITH GEOMETRY -->
+<div class="asteroids-container" id="asteroids-container">
+  <!-- Asteroid 1: Jagged irregular rock -->
+  <div class="asteroid asteroid-1" style="width: 32px; height: 32px;">
+    <svg viewBox="0 0 32 32" fill="white">
+      <path d="M16 2 L20 8 L26 6 L24 12 L28 16 L22 18 L24 24 L18 22 L16 28 L14 22 L8 24 L10 18 L4 16 L10 12 L8 6 L14 8 Z" stroke="rgba(255,255,255,0.4)" stroke-width="0.5"/>
+      <circle cx="18" cy="16" r="1.5" fill="rgba(255,255,255,0.6)"/>
+      <circle cx="10" cy="12" r="1" fill="rgba(255,255,255,0.5)"/>
+      <circle cx="14" cy="20" r="0.8" fill="rgba(255,255,255,0.4)"/>
+    </svg>
+  </div>
+
+  <!-- Asteroid 2: Rounded with cracks -->
+  <div class="asteroid asteroid-2" style="width: 24px; height: 24px;">
+    <svg viewBox="0 0 24 24" fill="white">
+      <path d="M12 2 Q18 4 20 10 Q22 16 18 20 Q12 24 6 20 Q2 16 4 10 Q6 4 12 2" stroke="rgba(255,255,255,0.3)" stroke-width="0.5"/>
+      <path d="M12 8 L14 12 M12 14 L10 18" stroke="rgba(255,255,255,0.25)" stroke-width="0.4" fill="none"/>
+      <circle cx="12" cy="8" r="1" fill="rgba(255,255,255,0.5)"/>
+      <circle cx="16" cy="14" r="1.2" fill="rgba(255,255,255,0.4)"/>
+      <circle cx="8" cy="12" r="0.8" fill="rgba(255,255,255,0.45)"/>
+    </svg>
+  </div>
+
+  <!-- Asteroid 3: Sharp angular -->
+  <div class="asteroid asteroid-3" style="width: 28px; height: 28px;">
+    <svg viewBox="0 0 28 28" fill="white">
+      <path d="M14 2 L22 8 L24 18 L18 24 L8 24 L2 18 L4 8 Z" stroke="rgba(255,255,255,0.35)" stroke-width="0.5"/>
+      <path d="M10 10 L16 14 M12 18 L20 16" stroke="rgba(255,255,255,0.2)" stroke-width="0.4" fill="none"/>
+      <circle cx="14" cy="10" r="1.5" fill="rgba(255,255,255,0.6)"/>
+      <circle cx="18" cy="16" r="1" fill="rgba(255,255,255,0.5)"/>
+      <circle cx="6" cy="14" r="0.9" fill="rgba(255,255,255,0.4)"/>
+      <circle cx="12" cy="22" r="0.7" fill="rgba(255,255,255,0.35)"/>
+    </svg>
+  </div>
+
+  <!-- Asteroid 4: Lumpy irregular -->
+  <div class="asteroid asteroid-4" style="width: 26px; height: 26px;">
+    <svg viewBox="0 0 26 26" fill="white">
+      <path d="M13 2 L19 5 L23 11 L22 18 L16 22 L8 23 L3 18 L2 11 L6 5 Z" stroke="rgba(255,255,255,0.3)" stroke-width="0.5"/>
+      <path d="M8 8 L14 12 L10 16" stroke="rgba(255,255,255,0.2)" stroke-width="0.4" fill="none"/>
+      <circle cx="13" cy="9" r="1.3" fill="rgba(255,255,255,0.55)"/>
+      <circle cx="19" cy="15" r="1.1" fill="rgba(255,255,255,0.45)"/>
+      <circle cx="7" cy="16" r="0.9" fill="rgba(255,255,255,0.4)"/>
+      <circle cx="10" cy="20" r="0.8" fill="rgba(255,255,255,0.35)"/>
+    </svg>
+  </div>
+
+  <!-- Asteroid 5: Spiky formation -->
+  <div class="asteroid asteroid-5" style="width: 30px; height: 30px;">
+    <svg viewBox="0 0 30 30" fill="white">
+      <path d="M15 2 L21 6 L25 12 L26 20 L20 26 L10 27 L4 22 L2 14 L5 7 Z" stroke="rgba(255,255,255,0.4)" stroke-width="0.5"/>
+      <path d="M10 10 Q15 12 18 16 M12 18 L20 14" stroke="rgba(255,255,255,0.22)" stroke-width="0.4" fill="none"/>
+      <circle cx="15" cy="12" r="1.4" fill="rgba(255,255,255,0.58)"/>
+      <circle cx="20" cy="18" r="1.2" fill="rgba(255,255,255,0.48)"/>
+      <circle cx="8" cy="14" r="0.95" fill="rgba(255,255,255,0.42)"/>
+      <circle cx="14" cy="24" r="0.85" fill="rgba(255,255,255,0.38)"/>
+      <circle cx="22" cy="10" r="0.7" fill="rgba(255,255,255,0.35)"/>
+    </svg>
+  </div>
+
+  <!-- Asteroid 6: Rounded with texture -->
+  <div class="asteroid asteroid-6" style="width: 22px; height: 22px;">
+    <svg viewBox="0 0 22 22" fill="white">
+      <path d="M11 2 Q17 4 19 10 Q20 16 16 19 Q11 22 6 19 Q2 16 3 10 Q5 4 11 2" stroke="rgba(255,255,255,0.32)" stroke-width="0.5"/>
+      <path d="M8 8 L14 10 M10 14 L12 18" stroke="rgba(255,255,255,0.18)" stroke-width="0.35" fill="none"/>
+      <circle cx="11" cy="7" r="1" fill="rgba(255,255,255,0.52)"/>
+      <circle cx="15" cy="12" r="0.95" fill="rgba(255,255,255,0.43)"/>
+      <circle cx="6" cy="13" r="0.8" fill="rgba(255,255,255,0.38)"/>
+    </svg>
+  </div>
+
+  <!-- Asteroid 7: Complex shape -->
+  <div class="asteroid asteroid-7" style="width: 29px; height: 29px;">
+    <svg viewBox="0 0 29 29" fill="white">
+      <path d="M14 2 L20 5 L25 11 L25 19 L19 25 L9 26 L3 20 L2 12 L7 6 Z" stroke="rgba(255,255,255,0.35)" stroke-width="0.5"/>
+      <path d="M9 9 L16 11 L13 17 M11 20 L18 18" stroke="rgba(255,255,255,0.21)" stroke-width="0.4" fill="none"/>
+      <circle cx="14" cy="11" r="1.35" fill="rgba(255,255,255,0.56)"/>
+      <circle cx="19" cy="16" r="1.05" fill="rgba(255,255,255,0.46)"/>
+      <circle cx="7" cy="15" r="0.92" fill="rgba(255,255,255,0.41)"/>
+      <circle cx="12" cy="23" r="0.82" fill="rgba(255,255,255,0.36)"/>
+      <circle cx="21" cy="8" r="0.75" fill="rgba(255,255,255,0.33)"/>
+    </svg>
+  </div>
+
+  <!-- Asteroid 8: Blocky formation -->
+  <div class="asteroid asteroid-8" style="width: 25px; height: 25px;">
+    <svg viewBox="0 0 25 25" fill="white">
+      <path d="M12 2 L19 4 L24 10 L24 18 L18 23 L8 24 L2 18 L1 10 L8 4 Z" stroke="rgba(255,255,255,0.33)" stroke-width="0.5"/>
+      <path d="M8 8 L16 12 M10 16 L18 14" stroke="rgba(255,255,255,0.2)" stroke-width="0.4" fill="none"/>
+      <circle cx="12" cy="10" r="1.2" fill="rgba(255,255,255,0.54)"/>
+      <circle cx="18" cy="15" r="1.08" fill="rgba(255,255,255,0.44)"/>
+      <circle cx="6" cy="14" r="0.88" fill="rgba(255,255,255,0.39)"/>
+      <circle cx="11" cy="21" r="0.8" fill="rgba(255,255,255,0.34)"/>
+    </svg>
+  </div>
+
+  <!-- Asteroid 9: Wispy irregular -->
+  <div class="asteroid asteroid-9" style="width: 27px; height: 27px;">
+    <svg viewBox="0 0 27 27" fill="white">
+      <path d="M13 2 L20 6 L24 13 L23 20 L16 25 L7 25 L2 19 L1 12 L6 5 Z" stroke="rgba(255,255,255,0.36)" stroke-width="0.5"/>
+      <path d="M9 9 L15 13 L11 17 M13 20 L19 16" stroke="rgba(255,255,255,0.23)" stroke-width="0.4" fill="none"/>
+      <circle cx="13" cy="12" r="1.3" fill="rgba(255,255,255,0.57)"/>
+      <circle cx="19" cy="17" r="1.1" fill="rgba(255,255,255,0.47)"/>
+      <circle cx="7" cy="15" r="0.9" fill="rgba(255,255,255,0.4)"/>
+      <circle cx="10" cy="22" r="0.85" fill="rgba(255,255,255,0.37)"/>
+      <circle cx="20" cy="9" r="0.72" fill="rgba(255,255,255,0.32)"/>
+    </svg>
+  </div>
+
+  <!-- Asteroid 10: Dense formation -->
+  <div class="asteroid asteroid-10" style="width: 31px; height: 31px;">
+    <svg viewBox="0 0 31 31" fill="white">
+      <path d="M15 2 L22 5 L27 12 L27 21 L21 27 L10 28 L3 22 L1 13 L6 5 Z" stroke="rgba(255,255,255,0.38)" stroke-width="0.5"/>
+      <path d="M10 10 L17 14 L13 19 M15 22 L22 18 M8 16 L14 18" stroke="rgba(255,255,255,0.24)" stroke-width="0.4" fill="none"/>
+      <circle cx="15" cy="13" r="1.4" fill="rgba(255,255,255,0.59)"/>
+      <circle cx="21" cy="18" r="1.15" fill="rgba(255,255,255,0.49)"/>
+      <circle cx="8" cy="16" r="0.93" fill="rgba(255,255,255,0.42)"/>
+      <circle cx="12" cy="24" r="0.87" fill="rgba(255,255,255,0.37)"/>
+      <circle cx="23" cy="10" r="0.78" fill="rgba(255,255,255,0.34)"/>
+      <circle cx="7" cy="8" r="0.68" fill="rgba(255,255,255,0.31)"/>
+    </svg>
+  </div>
+
+  <!-- Connector lines SVG -->
+  <svg id="connectors" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;">
+  </svg>
+</div>
+
+<!-- HERO -->
+<div class="hero" style="position:relative;z-index:1;">
+  <h1>
+    <span class="line1">This is how</span>
+    <span class="grad">I Become a Full-Stack Developer</span>
+  </h1>
+  <p>My personal roadmap — Freelance → Job → Startup. Adjusted timelines, real projects, AI workflow integration. Built for 3.5–4 hrs/day.</p>
+  <div class="hero-stats">
+    <div class="stat-card"><div class="val">5 Phases</div><div class="lbl">Foundation → Production</div></div>
+    <div class="stat-card"><div class="val">~12 Months</div><div class="lbl">At 3.5 hrs/day</div></div>
+    <div class="stat-card"><div class="val">5 Big Projects</div><div class="lbl">Freelance-ready portfolio</div></div>
+    <div class="stat-card"><div class="val">30+ Mini Projects</div><div class="lbl">Skill-building exercises</div></div>
+    <div class="stat-card"><div class="val">AI-Integrated</div><div class="lbl">2026 workflow ready</div></div>
+  </div>
+</div>
+
+<!-- PROGRESS BAR -->
+<div class="progress-wrap">
+  <div class="container">
+    <div class="progress-top">
+      <span class="progress-title">My Progress</span>
+      <span class="progress-pct" id="pct-label">0% — Start your journey, Zihad! 💪</span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+    <div class="progress-phases" id="progress-phases"></div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="container" style="padding-top:40px;padding-bottom:80px;">
+
+  <div class="sec-header">
+    
+    <h2>The Roadmap</h2>
+  </div>
+  <div id="phases-root"></div>
+
+  <!-- AI Tools -->
+  <div style="margin-bottom:48px;">
+    <div class="sec-header">
+      <span class="label">// AI Toolkit — 2026 Workflow</span>
+      <h2>AI Tools for Developers</h2>
+      <p>This is 2026. AI is how you work — not a cheat code, a multiplier.</p>
+    </div>
+    <div class="ai-tools-grid" id="ai-tools-root"></div>
+  </div>
+
+  <!-- AI Habits -->
+  <div style="background:var(--blue-l);border:1px solid var(--blue-b);border-radius:16px;padding:24px;margin-bottom:48px;">
+    <span class="label" style="color:var(--blue);margin-bottom:10px;display:block;">// AI-Assisted Development — The Right Mindset for Zihad</span>
+    <div class="ai-rule-grid" id="ai-habits-root"></div>
+  </div>
+
+  <!-- Career -->
+  <div style="margin-bottom:48px;">
+    <div class="sec-header"><span class="label">// Career Path</span><h2>Freelance → Job → Startup</h2></div>
+    <div class="career-grid" id="career-root"></div>
+  </div>
+
+  <!-- Warnings -->
+  <div style="margin-bottom:48px;">
+    <div class="sec-header"><span class="label">// Industry Notes</span><h2 style="margin-bottom:0;">Important Signals</h2></div>
+    <div id="warnings-root" style="margin-top:16px;"></div>
+  </div>
+
+  <!-- Journal -->
+  <div class="journal-section" id="journal-section">
+    <span class="label" style="display:block;margin-bottom:4px;">// Zihad's Learning Journal</span>
+    <h2>Phase Notes & Reflections</h2>
+    <p>Write what you learned, what was hard, what clicked — after each phase. Notes save automatically and persist when you host this file.</p>
+    <div id="phase-journals"></div>
+    <div class="journey-box" style="margin-top:20px;">
+      <h3>✍️ Zihad's Journey Log</h3>
+      <p class="jb-sub">Your personal story. Write anything — struggles, wins, moments of clarity, how you feel. This is yours alone.</p>
+      <textarea class="journey-textarea" id="journey-textarea" placeholder="Start writing your story, Zihad..."></textarea>
+      <div class="journey-actions">
+        <div>
+          <button class="journey-save-btn" onclick="saveJourney()">Save My Story</button>
+          <span style="font-family:var(--mono);font-size:10px;color:var(--green);margin-left:12px;opacity:0;transition:opacity .3s;" id="journey-saved">✓ Saved!</span>
+        </div>
+        <span style="font-family:var(--mono);font-size:10px;color:var(--subtle);" id="journey-date"></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-note">
+    <span class="label" style="display:block;margin-bottom:12px;">// Final Note for Zihad</span>
+    <p>Consistency beats intensity. 3.5 hours every day for 12 months compounds into something most people never reach. Every project you ship publicly is worth more than 10 private ones. Your GitHub profile is your CV until you have job experience. Push code every single day, even small things.</p>
+    <p class="note">Click phase numbers to mark complete · Click cards to expand · Your notes auto-save to localStorage</p>
+  </div>
+
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════════════════════════════════
+
+const COLORS = {
+  1:{c:'#dc2626',l:'#fef2f2',b:'#fecaca',g:'linear-gradient(135deg,#dc2626,#ea580c)'},
+  2:{c:'#2563eb',l:'#eff6ff',b:'#bfdbfe',g:'linear-gradient(135deg,#2563eb,#7c3aed)'},
+  3:{c:'#16a34a',l:'#f0fdf4',b:'#bbf7d0',g:'linear-gradient(135deg,#16a34a,#0369a1)'},
+  4:{c:'#be123c',l:'#fff1f2',b:'#fecdd3',g:'linear-gradient(135deg,#be123c,#dc2626)'},
+  5:{c:'#0369a1',l:'#f0f9ff',b:'#bae6fd',g:'linear-gradient(135deg,#0369a1,#7c3aed)'},
+};
+
+const PHASES = [
+  {
+    id:1, num:'01', title:'Foundations', sub:'HTML · CSS · Git & GitHub', duration:'5 weeks', diff:1,
+    tags:[{t:'DO NOT SKIP',c:'#dc2626'},{t:'HIGH ROI',c:'#f97316'}],
+    overview:"The bedrock of everything you will ever build. At 3.5 hrs/day you can master this in 5 focused weeks. CSS especially deserves full attention — bad CSS habits are the #1 reason beginners struggle later.",
+    topics:[
+      {name:'HTML5',time:'1 week',badge:'DO NOT SKIP',bc:'#dc2626',
+        must:["Semantic elements — header, nav, main, section, article, footer","Forms, input types & validation","Accessibility (aria-labels, roles, tab order)","Meta tags & basic SEO","HTML5 data attributes"],
+        opt:["Canvas element basics","Web Workers intro"]},
+      {name:'CSS',time:'3–4 weeks',badge:'HIGH ROI',bc:'#f97316',
+        must:["Box model — margin, padding, border (understand it cold)","Flexbox — master completely, not just copy-paste","CSS Grid — master completely","Responsive design & media queries (mobile-first)","CSS custom properties (--variables)","Animations & transitions","Pseudo-classes & pseudo-elements"],
+        opt:["SASS/SCSS","CSS art","CSS-in-JS"]},
+      {name:'Git & GitHub',time:'From day 1',badge:'2026 STANDARD',bc:'#8b5cf6',
+        must:["git init, add, commit, push, pull","Branching & merging","Pull requests & code review flow","GitHub profile setup (professional README)","Writing good commit messages"],
+        opt:["Conventional commits spec","GitHub Actions intro","git rebase --interactive"]},
+    ],
+    bigProject:{name:'Business Agency Website',desc:'A complete, professional multi-section agency website — animated hero, services showcase, team section, portfolio gallery, client testimonials, contact form with validation. Fully responsive, deployed to GitHub Pages with a custom domain. This is Big Project #1 — make it impressive.',skills:['HTML5','CSS Grid','Flexbox','CSS Animations','Git','GitHub Pages'],num:'#1'},
+    bonusProject:{name:'CSS Component Kit',desc:'Build 20+ reusable UI components from scratch without any framework — buttons, cards, badges, modals, tooltips. Your own personal component library.'},
+    minis:[
+      {name:'Profile Card',desc:'Responsive card with avatar, bio, social links and smooth hover effects.'},
+      {name:'Pricing Table',desc:'3-column pricing layout with a highlighted recommended plan and feature list.'},
+      {name:'CSS Navigation',desc:'Responsive navbar with a CSS-only hamburger menu for mobile screens.'},
+      {name:'FAQ Accordion',desc:'Expandable Q&A section built with pure CSS — zero JavaScript.'},
+      {name:'Product Card Grid',desc:'Grid of product cards with hover effects, sale badges and "Add to Cart" buttons.'},
+      {name:'Hero Section Clone',desc:'Clone the exact hero section of any popular website pixel-perfectly.'},
+      {name:'Login / Sign-Up Form',desc:'Styled authentication forms with floating labels and focus animations.'},
+    ],
+    mistakes:["Skipping CSS and jumping to Tailwind — you will hit walls everywhere, guaranteed","Not starting Git from day 1 — painful and embarrassing to learn it mid-project","Memorising HTML tags instead of understanding document structure and semantics","Building desktop-only layouts without learning mobile-first responsiveness"],
+    avoid:["Sass before CSS mastery","Bootstrap/frameworks before layout fundamentals","Weeks of CSS art projects"],
+    ai:{level:'Concept learning only',note:'Use AI to explain confusing concepts. Do NOT generate HTML/CSS with AI yet. Your hands need to write the code to build real muscle memory. There is no shortcut here.',tools:['ChatGPT / Claude — for concept explanations only','GitHub Copilot — keep it completely OFF']},
+    ready:["Build any responsive layout without Googling the syntax","Flexbox and Grid feel intuitive","5+ meaningful commits on GitHub this week","Can explain the box model in 30 seconds"],
+    job:"Take small HTML/CSS landing page gigs ($50–200). Start your GitHub profile now.",
+  },
+  {
+    id:2, num:'02', title:'JavaScript', sub:'The language of the web', duration:'10 weeks', diff:3,
+    tags:[{t:'MANUAL SKILL REQUIRED',c:'#dc2626'},{t:'DO NOT RUSH',c:'#f97316'}],
+    overview:"JavaScript is the most important language you will ever learn. 10 weeks feels long — it is not. Weak JS fundamentals will silently haunt every future phase. Write every single line yourself. This is the one phase where AI assistance actively hurts you.",
+    topics:[
+      {name:'JS Fundamentals',time:'3 weeks',badge:'DO NOT SKIP',bc:'#dc2626',
+        must:["Variables — let/const/var differences and why they matter","Functions, scope, and closures (really understand closures)","Arrays and array methods — map, filter, reduce, forEach","Objects, destructuring, spread operator","DOM manipulation — selecting, creating, modifying elements","Events and event delegation","Type coercion and strict equality (=== vs ==)"],
+        opt:["Regular expressions","WeakMap and WeakSet","Symbol type"]},
+      {name:'Async JavaScript',time:'3 weeks',badge:'IMPORTANT',bc:'#f97316',
+        must:["Callbacks and why callback hell is a problem","Promises — .then(), .catch(), .finally()","async/await syntax","Fetch API and making REST calls","Error handling with try/catch/finally","JSON.parse() and JSON.stringify()"],
+        opt:["Generators and iterators","Observable pattern intro"]},
+      {name:'Advanced JS',time:'4 weeks',badge:'HIGH ROI',bc:'#eab308',
+        must:["ES6+ modules — import/export (named and default)","Prototypes and class syntax","The 'this' keyword in all its contexts","Event loop and call stack — visualise how it works","localStorage and sessionStorage","Web APIs — setTimeout, setInterval, requestAnimationFrame"],
+        opt:["Proxy and Reflect","WebSockets intro","Service Workers basics"]},
+    ],
+    bigProject:{name:'Real-Time Data Dashboard',desc:"A polished live dashboard that fetches from real public APIs (weather, news, cryptocurrency). Filter by city/category, save preferences to localStorage, fully animated with smooth transitions. Pure Vanilla JS mastery — zero frameworks. This is Big Project #2 — your proof that you can build something real without training wheels.",skills:['Vanilla JS','Fetch API','REST APIs','localStorage','DOM Manipulation','CSS Animations'],num:'#2'},
+    bonusProject:{name:'Mini JS Utility Library',desc:"Build your own tiny lodash-like library — map, filter, debounce, throttle, deepClone. Shows depth."},
+    minis:[
+      {name:'Calculator App',desc:'Functional calculator with keyboard support, history log, and clear/backspace.'},
+      {name:'Quiz App',desc:'10 questions, countdown timer per question, score tracking, result screen with replay.'},
+      {name:'Countdown Timer',desc:'Set any future date, watch it count down live. Save target dates to localStorage.'},
+      {name:'Form Validator',desc:'Real-time validation — email format, password strength, match check, with error messages.'},
+      {name:'Image Gallery',desc:'Filter images by category, lightbox on click, keyboard navigation support.'},
+      {name:'Typing Speed Test',desc:'Measure WPM and accuracy live. Show a results summary with a retry option.'},
+      {name:'Infinite Scroll',desc:'Simulate infinite scroll fetching from a public JSON API as you reach the bottom.'},
+    ],
+    mistakes:["Using jQuery in 2026. Just don't.","Rushing to React before understanding JS deeply — you will struggle silently for months","Copy-pasting solutions from StackOverflow or AI without understanding why they work","Not understanding the event loop — it will destroy your async debugging confidence","Ignoring error handling because 'it works in the happy path'"],
+    avoid:["jQuery","CoffeeScript","Learning multiple frameworks before finishing JS fundamentals"],
+    ai:{level:'Selective — debugging help only',note:"Write your code first. When you hit a bug, try to solve it for 15 minutes before asking AI. When you do ask, ask it to EXPLAIN the fix, not just give you the answer.",tools:['Claude / ChatGPT — for error explanations only','GitHub Copilot — OK for boilerplate, OFF for logic problems']},
+    ready:["Fetch API data without looking up the syntax","Explain closures to someone else without hesitation","Debug JavaScript errors independently without immediately Googling","Write async/await code confidently from memory"],
+    job:"Interactive website gigs open up. Small JS-heavy contracts. Raise your rates.",
+  },
+  {
+    id:3, num:'03', title:'Modern Frontend', sub:'Tailwind · React · TypeScript Basics', duration:'11 weeks', diff:3,
+    tags:[{t:'2026 INDUSTRY STANDARD',c:'#8b5cf6'},{t:'HIGH ROI',c:'#f97316'}],
+    overview:"React is still the dominant frontend framework in 2026 and TypeScript is now the industry default — not optional. Tailwind is the fastest path to professional UIs. Learn them together. They compound into something powerful.",
+    topics:[
+      {name:'Tailwind CSS',time:'1 week',badge:'2026 STANDARD',bc:'#8b5cf6',
+        must:["Utility class mental model — understand it, don't fight it","Responsive prefixes — sm: md: lg: xl:","Dark mode setup","Custom theme configuration","Common component patterns (card, button, form, nav)"],
+        opt:["Tailwind plugins","shadcn/ui component library"]},
+      {name:'React',time:'8 weeks',badge:'DO NOT SKIP',bc:'#dc2626',
+        must:["JSX and the component model","useState and useEffect hooks (deeply)","useContext and custom hooks","React Router v6 — nested routes, layouts, loaders","Props, lifting state, and component composition","Controlled forms in React","Performance — useMemo, useCallback, React.memo","Error boundaries"],
+        opt:["Redux (learn Zustand instead — far simpler)","Class components — skim only, legacy"]},
+      {name:'TypeScript Basics',time:'2 weeks',badge:'IMPORTANT',bc:'#f97316',
+        must:["Basic types and type inference","Interfaces and type aliases","Typing React component props","Typing API response shapes","Union and intersection types"],
+        opt:["Generics — save for Phase 05","Advanced utility types"]},
+    ],
+    bigProject:{name:'Freelancer Client Portal',desc:"A full client management SaaS — project tracker with status columns, invoice generator with PDF export, task board, client profile pages, dark/light mode toggle, dashboard with analytics charts. Built with React + TypeScript + Tailwind. Deployed on Vercel. This is Big Project #3 — you can sell this or use it for your own freelance business.",skills:['React','TypeScript','Tailwind CSS','React Router','Recharts','Vercel'],num:'#3'},
+    bonusProject:{name:'Design System Kit',desc:'Build 25+ reusable, typed React components with Storybook documentation. Shows companies you think in systems.'},
+    minis:[
+      {name:'GitHub Profile Finder',desc:'Search any GitHub user — show repos, stars, followers, contribution graph via API.'},
+      {name:'Movie Search App',desc:'Search movies via OMDB API, save favourites to localStorage, filter by genre/year.'},
+      {name:'Expense Tracker',desc:'Add/delete expenses by category, running total, category breakdown with a pie chart.'},
+      {name:'Drag & Drop Kanban',desc:'Todo / In Progress / Done columns with drag-and-drop cards and localStorage persistence.'},
+      {name:'Markdown Previewer',desc:'Side-by-side Markdown editor and live rendered preview with syntax highlighting.'},
+      {name:'Recipe Finder',desc:'Search recipes by ingredient via public API, save favourites, filter by diet type.'},
+    ],
+    mistakes:["Using Create React App (CRA) — it is dead in 2026. Use Vite instead.","Learning Redux before mastering useState/useContext","Skipping TypeScript — every serious company requires it now","Not using React DevTools — install it immediately, it's free"],
+    avoid:["Create React App (dead)","Redux for small/medium apps","Angular or Vue alongside React","Class components for any new code"],
+    ai:{level:'Regular use begins here',note:'AI pair programming starts in this phase. Use Cursor or Copilot for component boilerplate. But review every single line. If you cannot explain it, delete it and rewrite it yourself.',tools:['Cursor — your primary IDE from now on','GitHub Copilot for autocomplete','Claude for architecture questions','v0 by Vercel for UI mockups']},
+    ready:["Build any UI component from scratch without referencing docs","TypeScript feels helpful rather than annoying","Can explain React's rendering cycle clearly","Portfolio has one real-world deployed app"],
+    job:"Serious frontend freelance opens up. $500–2000+ projects. Internship-ready for frontend roles.",
+  },
+  {
+    id:4, num:'04', title:'Backend & Databases', sub:'Node.js · Express · MongoDB · MySQL', duration:'14 weeks', diff:4,
+    tags:[{t:'MANUAL SKILL REQUIRED',c:'#dc2626'},{t:'CAREER LEVEL UP',c:'#16a34a'}],
+    overview:"Full-stack capability starts here. Node.js and Express power most JavaScript backends in 2026. MongoDB is your primary database. MySQL gives you the SQL understanding every company expects. Complete this phase and you are genuinely, seriously employable.",
+    topics:[
+      {name:'Node.js',time:'5 weeks',badge:'DO NOT SKIP',bc:'#dc2626',
+        must:["Node.js runtime and the event loop (understand it, don't just use it)","npm/npx and package.json management","File system module (fs) — reading, writing, watching files","Environment variables and .env files","CommonJS vs ES modules","Building simple CLI tools"],
+        opt:["Worker threads","Node Streams advanced usage","Native addons"]},
+      {name:'Express.js + REST APIs',time:'5 weeks',badge:'HIGH ROI',bc:'#f97316',
+        must:["Routing and controller pattern","Middleware — custom and popular (morgan, helmet, cors)","JWT authentication — access tokens and refresh tokens","Input validation with Zod (2026 standard)","Error handling middleware","REST API design principles and conventions","Rate limiting and security headers (helmet.js)"],
+        opt:["GraphQL with Apollo","tRPC","WebSockets with Socket.io"]},
+      {name:'MongoDB',time:'4 weeks',badge:'PRIMARY DATABASE',bc:'#2563eb',
+        must:["CRUD operations","Mongoose ODM and schema design","Document relationships — ref and populate","Indexing for query performance","Aggregation pipeline basics","MongoDB Atlas cloud setup"],
+        opt:["Transactions","Change streams","Full-text search"]},
+      {name:'MySQL Basics',time:'Last 2 weeks',badge:'IMPORTANT',bc:'#f97316',
+        must:["Tables, columns and data types","CRUD in SQL","INNER, LEFT, RIGHT JOINs","Indexes and basic query optimisation","Basic normalisation — 1NF, 2NF, 3NF"],
+        opt:["Stored procedures","Triggers","MySQL transactions"]},
+    ],
+    bigProject:{name:'Appointment Booking System',desc:"A complete full-stack booking platform — user registration and login, service catalogue, real-time time slot selection with conflict prevention, admin dashboard to manage all bookings, automated email notifications, payment UI with Stripe. Every local business (doctors, salons, lawyers, restaurants) needs this. This is Big Project #4 — high-paying freelance niche and genuinely impressive.",skills:['Node.js','Express','MongoDB','JWT Auth','Zod','React Frontend','Nodemailer','Stripe UI'],num:'#4'},
+    bonusProject:{name:'Real-Time Chat App',desc:'WebSockets with Socket.io, chat rooms, message history, read receipts, online indicators, file sharing.'},
+    minis:[
+      {name:'URL Shortener',desc:'Create short URLs, track click counts, view analytics per link. Full CRUD.'},
+      {name:'Notes API + Frontend',desc:'Simple CRUD notes app with user auth, tags, search, and pin functionality.'},
+      {name:'File Upload Service',desc:'Upload images or files via multer, store to disk or Cloudinary, return a hosted URL.'},
+      {name:'Blog REST API',desc:'Posts, comments, categories, tags. Full Mongoose schema with populate relationships.'},
+      {name:'Email Newsletter API',desc:'Subscriber signup, unsubscribe, admin sends newsletter via Nodemailer.'},
+      {name:'Expense API with Auth',desc:'Protected routes, per-user expense records, monthly summary endpoints.'},
+      {name:'CLI Task Manager',desc:'A command-line todo app using Node.js and a JSON file as a database. Surprisingly useful skill.'},
+    ],
+    mistakes:["Building APIs without input validation — a serious security disaster","Storing passwords in plain text — always use bcrypt, always","Not understanding SQL vs NoSQL — when to use each","Skipping error handling middleware — your production app WILL crash","Putting API keys in your codebase","Attempting microservices before mastering a monolith"],
+    avoid:["PHP unless you specifically need a legacy job","Building auth from scratch without understanding security","Microservices at this stage","ORMs without understanding raw SQL first"],
+    ai:{level:'Heavy and strategic use',note:'AI excels at generating boilerplate routes, test data, schema designs, and middleware. But write your authentication and all security-critical code manually. AI makes subtle security mistakes invisible to beginners.',tools:['Cursor for API development','Postman AI for testing and docs','Claude for database schema design','GitHub Copilot for route boilerplate']},
+    ready:["Build and deploy a secure REST API completely independently","Design database schemas for real-world requirements","Implement JWT auth without copying from tutorials","Debug server errors calmly without panic"],
+    job:"Full-stack freelance is now open. $1000–5000+ projects. Apply for junior developer positions now.",
+  },
+  {
+    id:5, num:'05', title:'Production & Next.js', sub:'Next.js 15 · TypeScript Deep · Deployment', duration:'8 weeks', diff:4,
+    tags:[{t:'2026 INDUSTRY STANDARD',c:'#8b5cf6'},{t:'CAREER ACCELERATOR',c:'#16a34a'}],
+    overview:"Next.js is what serious React developers build with in 2026. SSR, SEO optimisation, Server Components, and API routes make it a complete production toolkit. TypeScript goes genuinely deep here. Deployment knowledge is what separates developers who ship from developers who just code.",
+    topics:[
+      {name:'Next.js 15',time:'5 weeks',badge:'2026 STANDARD',bc:'#8b5cf6',
+        must:["App Router architecture — this is the standard, not Pages Router","Server Components vs Client Components — the core mental model","SSR, SSG, and ISR — when to use each and why","API Routes and Server Actions","Middleware for auth and redirects","Image and font optimisation","Metadata API and SEO configuration"],
+        opt:["Pages Router — understand it exists for legacy","Next.js i18n","Edge Runtime"]},
+      {name:'TypeScript — Deep Dive',time:'Throughout',badge:'MANUAL SKILL',bc:'#dc2626',
+        must:["Generics — truly understand them, not just use them","Utility types — Partial, Required, Pick, Omit, ReturnType, Awaited","Type narrowing and type guards","Discriminated unions","Strict mode configuration","Declaration files (.d.ts)"],
+        opt:["Conditional types","Template literal types","Mapped types"]},
+      {name:'Deployment & DevOps Basics',time:'1 week',badge:'DO NOT SKIP',bc:'#dc2626',
+        must:["Vercel for Next.js deployment (near-zero config)","Railway for Node.js backends","Environment variables in production","Custom domain setup","CI/CD concepts and a simple GitHub Actions workflow","Error monitoring with Sentry basics"],
+        opt:["Docker fundamentals","AWS basics — S3, EC2","Kubernetes intro"]},
+    ],
+    bigProject:{name:'Multi-Vendor E-Commerce Platform',desc:"The capstone. A full marketplace — vendor registration and dashboard, product listings with search and filters, cart and multi-step checkout, Stripe payments, order management and tracking, buyer/seller review system, analytics dashboard, full admin panel, SEO-optimised with Next.js metadata API. Built with Next.js 15 + TypeScript + MongoDB. This is Big Project #5 — the one that goes top of Zihad's CV and proves startup-level capability.",skills:['Next.js 15','TypeScript','MongoDB','Tailwind CSS','Stripe','Vercel','React Server Components'],num:'#5 CAPSTONE 🏆'},
+    bonusProject:{name:'SaaS Starter Kit',desc:'Auth, Stripe billing, multi-tenancy, teams, role-based access — a reusable foundation to launch any SaaS from.'},
+    minis:[
+      {name:'MDX Portfolio Blog',desc:"Write posts in Markdown, Next.js generates static pages automatically with proper SEO metadata."},
+      {name:'Link in Bio App',desc:'Your personal Linktree clone — add/edit links via an admin panel, fully customisable.'},
+      {name:'SEO Landing Page',desc:'Fully SEO-optimised with Next.js Metadata API, structured data (JSON-LD), 100 Lighthouse score.'},
+      {name:'Analytics Dashboard',desc:'Charts for page views, user activity, funnel data using Recharts or Chart.js with Next.js API routes.'},
+      {name:'AI Chatbot Widget',desc:'Embed a chat widget powered by the Vercel AI SDK and Claude. Real AI feature in your portfolio.'},
+    ],
+    mistakes:["Learning Pages Router for new projects — App Router is the 2026 standard","Adding 'use client' to every component — defeats the entire purpose of Next.js","Shipping without error monitoring","Committing .env files to GitHub — happens to everyone once","Ignoring Core Web Vitals — companies check these"],
+    avoid:["Pages Router for new projects","Premature DevOps complexity before you have something to ship","Over-engineering infrastructure before product-market fit"],
+    ai:{level:'Professional daily workflow',note:'By Phase 05, AI is a core pillar of your workflow. You direct it, review everything it produces, and confidently catch its mistakes. You have developed the senior developer skill — AI as leverage, not replacement.',tools:['Cursor as primary IDE','Claude for architecture and code review','Vercel AI SDK for AI features','MCP ecosystem for workflow automation','v0 for rapid UI prototyping']},
+    ready:["Deploy Next.js apps to production independently","Advanced TypeScript feels natural and helpful","Portfolio generates interview callbacks","Can lead a project from idea to live product"],
+    job:"Senior freelance rates ($30–80+/hr). SaaS product launches. Top 10% of full-stack developers.",
+  },
+];
+
+const MILESTONES = [
+  {after:'Foundations Complete',emoji:'🧱',can:["Build any responsive layout from scratch","Deploy to GitHub Pages","Use Git daily"],gig:"Take HTML/CSS landing page gigs. Bid on Fiverr and Upwork.",next:"10 weeks of JavaScript. This is where it gets genuinely real."},
+  {after:'JavaScript Complete',emoji:'⚡',can:["Fetch and display live API data","Build interactive UIs with zero frameworks","Debug JS errors independently"],gig:"Upgrade old static sites with interactivity. Small JS-heavy contracts.",next:"React will feel like superpowers built on everything you just learned."},
+  {after:'Modern Frontend Complete',emoji:'⚛️',can:["Build complete React applications","Write type-safe TypeScript code","Design professional UIs with Tailwind at speed"],gig:"Frontend freelance projects. $500–2000 SPA apps are realistic now.",next:"The backend is the final frontier. Complete it and you are full-stack."},
+  {after:'Backend Complete',emoji:'🛠️',can:["Build and deploy secure REST APIs","Design database schemas","Implement JWT auth correctly"],gig:"Full-stack projects open up. $1000–5000+ contracts. Apply for junior jobs.",next:"Next.js takes you to senior territory. The capstone awaits."},
+  {after:'Production Complete',emoji:'🚀',can:["Ship Next.js production apps with SSR and SEO","Set up CI/CD and error monitoring","Lead a project from idea to launch"],gig:"Senior freelance rates. SaaS launches. Startup co-founder-ready skills.",next:"Keep building. Keep shipping. Zihad, you have genuinely made it."},
+];
+
+const AI_TOOLS = [
+  {name:'Cursor',phase:'Phase 03+',type:'AI-Native IDE',hot:true,desc:'Your primary editor in 2026. Understands your entire codebase and writes code with full context. Start using it from Phase 03. It will change how you work permanently.'},
+  {name:'Claude',phase:'All Phases',type:'AI Reasoning',hot:true,desc:'Best for architecture decisions, complex reasoning, code review, and explaining abstract concepts. Ask it WHY, not just WHAT. Use it to think alongside you.'},
+  {name:'GitHub Copilot',phase:'Phase 03+',type:'Autocomplete',hot:false,desc:"Line-by-line AI autocomplete that reads your intent. Extremely useful for boilerplate. Keep it completely OFF in Phase 01–02 to build real fundamentals first."},
+  {name:'v0 by Vercel',phase:'Phase 03+',type:'UI Generator',hot:true,desc:"Describe a UI in plain English, receive React + Tailwind code instantly. Perfect for rapid prototyping. Never ship v0 output without reviewing every line."},
+  {name:'Windsurf',phase:'Phase 04+',type:'Agentic IDE',hot:false,desc:"Cursor alternative with strong agentic features. Can take multi-step autonomous actions across your codebase. Try it in Phase 04–05 to see which editor suits you."},
+  {name:'Postman AI',phase:'Phase 04+',type:'API Tools',hot:false,desc:"AI-assisted API testing, auto-documentation generation, and test suite creation. Saves hours during backend development."},
+  {name:'MCP Ecosystem',phase:'Phase 05+',type:'AI Infrastructure',hot:true,desc:"Model Context Protocol — connect AI directly to your GitHub, databases, terminals, and code. The 2026 power user workflow."},
+  {name:'ChatGPT',phase:'All Phases',type:'AI Assistant',hot:false,desc:"Great for general problem-solving, learning concepts, and generating realistic test data. Use alongside Claude for different perspectives on hard problems."},
+];
+
+const AI_HABITS = [
+  {phase:'Phase 01–02',rule:'AI OFF. Learn manually. Build muscle memory. No exceptions. This is where your fundamentals either become solid or stay shaky forever.',c:'#dc2626'},
+  {phase:'Phase 03',rule:"AI for boilerplate only. Review every line it writes. Delete what you can't explain. Your ability to catch AI mistakes is the real skill being built here.",c:'#ea580c'},
+  {phase:'Phase 04',rule:"AI for speed. Write security code yourself. Use AI for test data, docs, and route boilerplate. Never let AI touch your auth logic without full review.",c:'#ca8a04'},
+  {phase:'Phase 05',rule:"AI as a daily partner. You direct it. You review it. You own the output. This is the senior developer mindset Zihad is building toward.",c:'#16a34a'},
+];
+
+const CAREER = [
+  {title:'Freelancer',emoji:'💼',from:'Month 2',color:'#dc2626',desc:'Start with small HTML/CSS landing page gigs and scale steadily to full-stack SaaS builds as your skills compound.',stages:['Month 2–5: $50–300/project (HTML/CSS gigs)','Month 6–9: $500–2000/project (frontend apps)','Month 10–12: $2000–8000/project (full-stack builds)'],platforms:['Fiverr','Upwork','LinkedIn outreach','Toptal (Phase 05+)']},
+  {title:'Junior Developer Job',emoji:'🏢',from:'Month 10+',color:'#2563eb',desc:'After Phase 04–05 you are legitimately ready for junior full-stack or frontend roles at tech companies.',stages:['Build 3 strong portfolio projects minimum','Open source contributions help','Junior role (remote): $2000–4000/month global'],platforms:['LinkedIn','AngelList / Wellfound','We Work Remotely','Remote OK']},
+  {title:'Startup Founder',emoji:'🚀',from:'Month 12+',color:'#16a34a',desc:"After building the E-Commerce capstone you have the complete skills to identify a problem and build a real SaaS product around it.",stages:['Phase 05 capstone = startup prototype experience','Launch on Product Hunt','Indie Hackers community for early traction'],platforms:['Product Hunt','Indie Hackers','YC Startup School','GitHub (open source first)']},
+];
+
+const WARNINGS = [
+  {label:'COMMON BEGINNER TRAP',text:"Tutorial hell — watching tutorials all day and never building from scratch. After any tutorial, close it and rebuild the same thing without looking.",c:'#dc2626',bg:'#fef2f2',bd:'#fecaca'},
+  {label:'OUTDATED IN 2026',text:"Create React App (CRA) is completely dead. jQuery is irrelevant. PHP is not a starting point. Class components are legacy code.",c:'#ea580c',bg:'#fff7ed',bd:'#fed7aa'},
+  {label:'AI DEPENDENCY RISK',text:"Using AI to write code you do not understand. Every line AI generates that you cannot explain is a wall you will hit later at the worst moment.",c:'#ca8a04',bg:'#fefce8',bd:'#fde68a'},
+  {label:'2026 INDUSTRY STANDARD',text:"TypeScript is not optional anymore. Every serious company expects it. Tailwind is the dominant CSS approach. Next.js is the React framework of choice. Git is assumed.",c:'#16a34a',bg:'#f0fdf4',bd:'#bbf7d0'},
+];
+
+// ═══════════════════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════════════════
+
+const LS = { DONE:'zihad_done', NOTES:'zihad_notes', JOURNEY:'zihad_journey', TABS:'zihad_tabs', OPEN:'zihad_open', TOPICS:'zihad_topics', TOPIC_DONE:'zihad_topic_done', PROJECT_DONE:'zihad_project_done' };
+function load(k,d){ try{const v=localStorage.getItem(k);return v?JSON.parse(v):d;}catch(e){return d;} }
+function save(k,v){ try{localStorage.setItem(k,JSON.stringify(v));}catch(e){} }
+
+let done      = load(LS.DONE,{});
+let notes     = load(LS.NOTES,{});
+let tabs      = load(LS.TABS,{});
+let opens     = load(LS.OPEN,{});
+let topicO    = load(LS.TOPICS,{});
+let topicDone = load(LS.TOPIC_DONE,{});
+let projDone  = load(LS.PROJECT_DONE,{});
+
+// ═══════════════════════════════════════════════════════════════════════
+// PROGRESS
+// ═══════════════════════════════════════════════════════════════════════
+
+function updateProgress(){
+  let totalItems=PHASES.length;
+  let completedItems=PHASES.filter(p=>done[p.id]).length;
+  PHASES.forEach(p=>{
+    totalItems+=p.topics.length+2+p.minis.length;
+    completedItems+=Object.keys(topicDone).filter(k=>k.startsWith(p.id+'_')&&topicDone[k]).length;
+    completedItems+=[`${p.id}_big`,`${p.id}_bonus`].filter(k=>projDone[k]).length;
+    completedItems+=p.minis.filter((_,i)=>projDone[`${p.id}_${i}_mini`]).length;
+  });
+  const pct=totalItems===0?0:Math.round((completedItems/totalItems)*100);
+  document.getElementById('progress-fill').style.width=pct+'%';
+  const msgs=['Start your journey, Zihad! 💪','Great start! Keep going 🔥','Momentum building! ⚡','Halfway done, Zihad! 🚀','Almost there! 🏆','Full-Stack Developer, Zihad! 🎉'];
+  const phaseCount=PHASES.filter(p=>done[p.id]).length;
+  document.getElementById('pct-label').textContent=pct+'% — '+msgs[Math.min(phaseCount,msgs.length-1)];
+  PHASES.forEach(p=>{ const el=document.getElementById('pp-'+p.id); if(el) el.classList.toggle('done',!!done[p.id]); });
+}
+
+function buildProgressPhases(){
+  document.getElementById('progress-phases').innerHTML=PHASES.map(p=>`
+    <div class="prog-phase ${done[p.id]?'done':''}" id="pp-${p.id}">
+      <div class="ph-dot"></div><span>Phase ${p.num} — ${p.title}</span>
+    </div>`).join('');
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// RENDER HELPERS
+// ═══════════════════════════════════════════════════════════════════════
+
+function chip(t,c,bg,bd){ return `<span class="tag" style="color:${c};background:${bg};border-color:${bd};">${t}</span>`; }
+function diffDots(n,c){ return[1,2,3,4,5].map(i=>`<div class="diff-dot" style="background:${i<=n?c:'#e5e7eb'}"></div>`).join(''); }
+
+function renderTopic(topic,phaseId,ti,col){
+  const key=`${phaseId}_${ti}`;
+  const isOpen=topicO[key]||false;
+  const isDone=topicDone[key]||false;
+  return `
+  <div class="topic-row" id="trow-${key}" style="${isDone?'opacity:0.65;':''}"><div style="display:flex;align-items:center;gap:8px;">
+    <input type="checkbox" ${isDone?'checked':''} onchange="toggleTopicDone('${key}')" style="cursor:pointer;width:16px;height:16px;margin-left:8px;"/>
+  <button class="topic-hdr" onclick="toggleTopic('${key}')" style="flex:1;">
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+        <span class="topic-name" id="tname-${key}" style="${isDone?'text-decoration:line-through;color:var(--muted);':''}">${topic.name}</span>
+        ${chip(topic.badge,topic.bc,topic.bc+'18',topic.bc+'40')}
+        <span class="topic-time">${topic.time}</span>
+      </div>
+      <span class="chevron" id="tc-${key}" style="transform:${isOpen?'rotate(180deg)':'none'}">▾</span>
+    </button></div>
+      <div id="tbody-${key}" style="display:${isOpen?'block':'none'};">
+        <div class="topic-body">
+          <p class="topic-section-label" style="color:${col};">▸ MUST LEARN</p>
+          <ul class="topic-list">${topic.must.map(m=>`<li style="--dot:${col}"><span style="position:absolute;left:0;color:${col};font-size:7px;top:7px;">●</span>${m}</li>`).join('')}</ul>
+          ${topic.opt.length?`<p class="topic-section-label" style="color:#9ca3af;margin-top:8px;">▸ OPTIONAL</p><ul class="topic-list opt">${topic.opt.map(o=>`<li>${o}</li>`).join('')}</ul>`:''}
+        </div>
+      </div>
+  </div>`;
+}
+
+function renderBigProject(p,col,g,phaseId){
+  const projKey=`${phaseId}_big`;
+  const isDone=projDone[projKey]||false;
+  return `
+  <div class="big-project-card" id="proj-card-${projKey}" style="background:linear-gradient(135deg,${col.l},#fff,${col.l});border:2px solid ${col.c}30;box-shadow:0 4px 24px ${col.c}15;opacity:${isDone?0.65:1};position:relative;">
+    <input type="checkbox" ${isDone?'checked':''} onchange="toggleProjectDone('${projKey}')" style="position:absolute;top:12px;right:12px;cursor:pointer;width:18px;height:18px;z-index:10;"/>
+    <div style="position:absolute;inset:0;border-radius:14px;background:${g};opacity:.04;pointer-events:none;"></div>
+    <div class="big-label" style="background:${g};color:#fff;">
+      ⭐ BIG PROJECT ${p.num}
+    </div>
+    <h4 id="proj-title-${projKey}" style="${isDone?'text-decoration:line-through;color:var(--muted);':''}">${p.name}</h4>
+    <p style="font-size:13px;color:#374151;line-height:1.8;">${p.desc}</p>
+    <div class="big-skills">
+      ${p.skills.map(s=>`<span class="big-skill" style="border-color:${col.c}30;color:${col.c};">${s}</span>`).join('')}
+    </div>
+  </div>`;
+}
+
+function renderPhase(phase){
+  const col=COLORS[phase.id];
+  const isOpen=opens[phase.id]||false;
+  const isDone=done[phase.id]||false;
+  const curTab=tabs[phase.id]||'topics';
+
+  const topicsHTML=phase.topics.map((t,ti)=>renderTopic(t,phase.id,ti,col.c)).join('');
+
+  const projectsHTML=`
+    ${renderBigProject(phase.bigProject,col,col.g,phase.id)}
+    <div class="project-card" id="proj-card-${phase.id}_bonus" style="position:relative;opacity:${projDone[`${phase.id}_bonus`]?0.65:1};">
+      <input type="checkbox" ${projDone[`${phase.id}_bonus`]?'checked':''} onchange="toggleProjectDone('${phase.id}_bonus')" style="position:absolute;top:14px;right:14px;cursor:pointer;width:16px;height:16px;z-index:10;"/>
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;flex-wrap:wrap;padding-right:24px;">
+        <h4 id="proj-title-${phase.id}_bonus" style="${projDone[`${phase.id}_bonus`]?'text-decoration:line-through;color:var(--muted);':''}">${phase.bonusProject.name}</h4>
+        ${chip('Bonus',col.c,col.c+'15',col.c+'35')}
+      </div>
+      <p style="margin-top:6px;">${phase.bonusProject.desc}</p>
+    </div>
+    <div class="mini-header">
+      <div class="mini-header-line"></div>
+      <span>Mini Projects (${phase.minis.length})</span>
+      <div class="mini-header-line"></div>
+    </div>
+    <div class="minis-grid">
+      ${phase.minis.map((m,i)=>{
+        const miniKey=`${phase.id}_${i}_mini`;
+        const isMiniDone=projDone[miniKey]||false;
+        return `
+        <div class="mini-card" id="proj-card-${miniKey}" style="animation-delay:${i*.04}s;position:relative;opacity:${isMiniDone?0.65:1};">
+          <input type="checkbox" ${isMiniDone?'checked':''} onchange="toggleProjectDone('${miniKey}')" style="position:absolute;top:12px;right:12px;cursor:pointer;width:14px;height:14px;z-index:10;"/>
+          <div class="mini-badge" style="background:${col.c}15;color:${col.c};margin-right:20px;">MINI ${String(i+1).padStart(2,'0')}</div>
+          <div class="mini-name" id="proj-title-${miniKey}" style="${isMiniDone?'text-decoration:line-through;color:var(--muted);':''}padding-right:20px;">${m.name}</div>
+          <div class="mini-desc">${m.desc}</div>
+        </div>`;
+      }).join('')}
+    </div>
+    <div class="ready-box">
+      <p class="label" style="color:${col.c};margin-bottom:10px;">▸ READINESS CHECK</p>
+      ${phase.ready.map(r=>`<div class="ready-item" style="--check:${col.c}"><span style="position:absolute;left:0;color:${col.c};">✓</span>${r}</div>`).join('')}
+      <p style="font-family:var(--mono);font-size:11px;color:var(--muted);margin-top:10px;">${phase.job}</p>
+    </div>`;
+
+  const aiHTML=`
+    <div class="ai-card" style="background:${col.l};border-color:${col.b};">
+      <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px;">
+        ${chip('AI LEVEL',col.c,col.c+'15',col.c+'35')}
+        <span style="font-size:12px;font-weight:700;color:${col.c};">${phase.ai.level}</span>
+      </div>
+      <p style="font-size:12px;color:#374151;line-height:1.8;margin-bottom:14px;">${phase.ai.note}</p>
+      <p class="label" style="color:${col.c};margin-bottom:8px;">▸ TOOLS THIS PHASE</p>
+      ${phase.ai.tools.map(t=>`<p style="font-size:12px;color:var(--muted);padding-left:14px;position:relative;margin:4px 0;"><span style="position:absolute;left:0;color:#d1d5db;font-size:7px;top:6px;">●</span>${t}</p>`).join('')}
+    </div>`;
+
+  const mistakesHTML=`
+    ${phase.mistakes.map(m=>`<div class="mistake-item">${m}</div>`).join('')}
+    <p class="label" style="color:#ea580c;margin-top:14px;margin-bottom:8px;">▸ DO NOT WASTE TIME ON</p>
+    ${phase.avoid.map(a=>`<div class="avoid-item">${a}</div>`).join('')}`;
+
+  const TABS_DEF=[['topics','Topics'],['projects',`Projects (${phase.minis.length+2})`],['ai','AI Usage'],['mistakes','Mistakes']];
+
+  return `
+  <div class="phase-row" id="prow-${phase.id}">
+    <div class="spine">
+      <button class="phase-btn" id="pbtn-${phase.id}"
+        style="color:${isDone?'#fff':col.c};background:${isDone?col.c:'var(--card)'};border-color:${col.c};${isDone?`box-shadow:0 2px 14px ${col.c}60`:''}"
+        onclick="toggleDone(${phase.id})" title="Mark complete">
+        ${isDone?'✓':phase.num}
+      </button>
+      ${phase.id<5?`<div class="spine-line" id="sline-${phase.id}" style="background:${isDone?`linear-gradient(180deg,${col.c},${COLORS[phase.id+1].c})`:'var(--border)'}"></div>`:''}
+    </div>
+    <div class="phase-body">
+      <div class="phase-card" id="pcard-${phase.id}" style="${isOpen?`border-color:${col.b};box-shadow:0 4px 24px ${col.c}10;`:''}">
+        <div class="phase-header" onclick="togglePhase(${phase.id})">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+            <div style="flex:1;">
+              <div class="phase-meta">
+                <span class="phase-num" style="color:${col.c};">${phase.num} · ${phase.duration}</span>
+                ${phase.tags.map(t=>chip(t.t,t.c,t.c+'14',t.c+'30')).join('')}
+              </div>
+              <h3 style="color:${isDone?col.c:'var(--text)'};">${phase.title}</h3>
+              <p class="sub">${phase.sub}</p>
+            </div>
+            <div class="ph-right">
+              <div class="diff-dots">${diffDots(phase.diff,col.c)}</div>
+              <span class="chevron" id="chev-${phase.id}" style="transform:${isOpen?'rotate(180deg)':'none'}">▾</span>
+            </div>
+          </div>
+          ${!isOpen?`<p class="overview">${phase.overview}</p>`:''}
+        </div>
+        <div id="pexpand-${phase.id}" style="display:${isOpen?'block':'none'};">
+          <div style="padding:0 20px;border-top:1px solid var(--border);">
+            <p style="font-size:12px;color:var(--muted);line-height:1.8;padding:12px 0;margin:0;">${phase.overview}</p>
+          </div>
+          <div class="tabs">
+            ${TABS_DEF.map(([id,label])=>`
+              <button class="tab-btn ${curTab===id?'active':''}" id="tbtn-${phase.id}-${id}"
+                style="${curTab===id?`color:${col.c};`:''}"
+                onclick="switchTab(${phase.id},'${id}')">${label}</button>`).join('')}
+          </div>
+          <div class="tab-content">
+            <div id="tc-topics-${phase.id}" style="display:${curTab==='topics'?'block':'none'};">${topicsHTML}</div>
+            <div id="tc-projects-${phase.id}" style="display:${curTab==='projects'?'block':'none'};">${projectsHTML}</div>
+            <div id="tc-ai-${phase.id}" style="display:${curTab==='ai'?'block':'none'};">${aiHTML}</div>
+            <div id="tc-mistakes-${phase.id}" style="display:${curTab==='mistakes'?'block':'none'};">${mistakesHTML}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="milestone" id="ms-${phase.id}" style="border-color:${col.b};border-left-color:${col.c};background:${col.l};">
+    <div class="milestone-top">
+      <span class="milestone-emoji">${MILESTONES[phase.id-1].emoji}</span>
+      <div>
+        <p class="milestone-title" style="color:${col.c};">Milestone — ${MILESTONES[phase.id-1].after}</p>
+        <p style="font-size:13px;font-weight:700;color:var(--text);margin:2px 0 0;">Zihad can now...</p>
+      </div>
+    </div>
+    <div class="can-tags">${MILESTONES[phase.id-1].can.map(c=>`<span class="can-tag" style="color:${col.c};background:${col.c}15;border-color:${col.c}30;">✓ ${c}</span>`).join('')}</div>
+    <p class="milestone-next"><span style="color:var(--subtle);font-weight:700;">NEXT: </span>${MILESTONES[phase.id-1].next}</p>
+    <p class="milestone-gig">💰 GIG: ${MILESTONES[phase.id-1].gig}</p>
+  </div>`;
+}
+
+function renderAITools(){
+  document.getElementById('ai-tools-root').innerHTML=AI_TOOLS.map(t=>`
+    <div class="ai-tool-card">
+      <div class="name-row">
+        <span class="tname">${t.name}</span>
+        ${t.hot?'<span class="hot-badge">HOT</span>':''}
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;">
+        <span style="background:var(--faint);border:1px solid var(--border);border-radius:5px;padding:2px 8px;font-family:var(--mono);font-size:10px;color:var(--muted);">${t.type}</span>
+        <span style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:5px;padding:2px 8px;font-family:var(--mono);font-size:10px;color:#2563eb;">${t.phase}</span>
+      </div>
+      <p>${t.desc}</p>
+    </div>`).join('');
+}
+
+function renderAIHabits(){
+  document.getElementById('ai-habits-root').innerHTML=AI_HABITS.map(h=>`
+    <div class="ai-rule" style="border-left:3px solid ${h.c};">
+      <p class="ph" style="color:${h.c};">${h.phase}</p>
+      <p>${h.rule}</p>
+    </div>`).join('');
+}
+
+function renderCareer(){
+  document.getElementById('career-root').innerHTML=CAREER.map(c=>`
+    <div class="career-card" style="border-top:3px solid ${c.color};">
+      <div class="cc-top">
+        <span class="cc-emoji">${c.emoji}</span>
+        <div><p class="cc-title">${c.title}</p><p class="cc-from" style="color:${c.color};">From ${c.from}</p></div>
+      </div>
+      <p>${c.desc}</p>
+      ${c.stages.map(s=>`<div class="career-stage" style=""><span style="position:absolute;left:0;color:${c.color};font-size:7px;top:5px;">●</span>${s}</div>`).join('')}
+      <div class="platform-tags">${c.platforms.map(p=>`<span class="platform-chip">${p}</span>`).join('')}</div>
+    </div>`).join('');
+}
+
+function renderWarnings(){
+  document.getElementById('warnings-root').innerHTML=WARNINGS.map(w=>`
+    <div class="warn-item" style="background:${w.bg};border-color:${w.bd};">
+      <span class="tag" style="color:${w.c};background:${w.c}15;border-color:${w.c}30;flex-shrink:0;">${w.label}</span>
+      <p>${w.text}</p>
+    </div>`).join('');
+}
+
+function renderJournal(){
+  document.getElementById('phase-journals').innerHTML=PHASES.map(p=>{
+    const col=COLORS[p.id];
+    const note=notes[p.id]||'';
+    const isOpen=opens['j_'+p.id]||false;
+    const dateSaved=load('zihad_note_date_'+p.id,'');
+    return `
+    <div class="journal-phase" style="border-color:${col.b};">
+      <div class="journal-phase-hdr" style="background:${col.l};" onclick="toggleJournalPhase(${p.id})">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span style="font-family:var(--mono);font-size:10px;color:${col.c};font-weight:700;">PHASE ${p.num}</span>
+          <span class="jph-title">${p.title}</span>
+          ${note?`<span style="font-family:var(--mono);font-size:10px;color:var(--green);">✓ Has notes</span>`:''}
+        </div>
+        <span style="color:var(--subtle);font-size:13px;transform:${isOpen?'rotate(180deg)':'none'};transition:transform .2s;display:inline-block;" id="jchev-${p.id}">▾</span>
+      </div>
+      <div class="journal-phase-body ${isOpen?'open':''}" id="jbody-${p.id}">
+        <p class="jnl-date" id="jdate-${p.id}">${dateSaved?'Last saved: '+dateSaved:'No notes yet — write your experience after completing this phase.'}</p>
+        <textarea class="jnl-textarea" id="jtxt-${p.id}" placeholder="What did you learn in Phase ${p.num}? What was hard? What clicked? How long did it take? Write anything, Zihad...">${note}</textarea>
+        <div class="jnl-actions">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <button class="jnl-save-btn" style="background:${col.g};" onclick="saveNote(${p.id})">Save Note</button>
+            <button class="jnl-clear-btn" onclick="clearNote(${p.id})">Clear</button>
+            <span class="jnl-saved-msg" id="jsaved-${p.id}">✓ Saved!</span>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// INTERACTIONS
+// ═══════════════════════════════════════════════════════════════════════
+
+function toggleTopicDone(key){
+  topicDone[key]=!topicDone[key];
+  save(LS.TOPIC_DONE,topicDone);
+  updateProgress();
+  const row=document.getElementById('trow-'+key);
+  const name=document.getElementById('tname-'+key);
+  if(row && name) {
+    row.style.opacity = topicDone[key] ? '0.65' : '1';
+    name.style.textDecoration = topicDone[key] ? 'line-through' : 'none';
+    name.style.color = topicDone[key] ? 'var(--muted)' : 'var(--text)';
+  }
+  if(topicDone[key]) showCompletionPopup('topic', name?.textContent || 'Topic');
+}
+
+function toggleProjectDone(key){
+  projDone[key]=!projDone[key];
+  save(LS.PROJECT_DONE,projDone);
+  updateProgress();
+  const card=document.getElementById('proj-card-'+key);
+  const title=document.getElementById('proj-title-'+key);
+  if(card && title) {
+    card.style.opacity = projDone[key] ? '0.65' : '1';
+    title.style.textDecoration = projDone[key] ? 'line-through' : 'none';
+    title.style.color = projDone[key] ? 'var(--muted)' : 'var(--text)';
+  }
+  if(projDone[key]) showCompletionPopup('project', title?.textContent || 'Project');
+}
+
+function toggleDone(id){
+  done[id]=!done[id];
+  save(LS.DONE,done);
+  document.getElementById('phases-root').innerHTML=PHASES.map(p=>renderPhase(p)).join('');
+  updateProgress(); buildProgressPhases(); observeRows();
+}
+
+function togglePhase(id){
+  opens[id]=!opens[id];
+  save(LS.OPEN,opens);
+  const exp=document.getElementById('pexpand-'+id);
+  const chev=document.getElementById('chev-'+id);
+  const card=document.getElementById('pcard-'+id);
+  const col=COLORS[id];
+  if(exp) exp.style.display=opens[id]?'block':'none';
+  if(chev) chev.style.transform=opens[id]?'rotate(180deg)':'none';
+  if(card){ card.style.borderColor=opens[id]?col.b:'var(--border)'; card.style.boxShadow=opens[id]?`0 4px 24px ${col.c}10`:''; }
+  const hdr=card?card.querySelector('.phase-header'):null;
+  if(hdr){
+    const ov=hdr.querySelector('.overview');
+    if(opens[id]&&ov) ov.remove();
+    if(!opens[id]&&!hdr.querySelector('.overview')){
+      const pe=document.createElement('p');
+      pe.className='overview';
+      pe.textContent=PHASES.find(p=>p.id===id).overview;
+      hdr.appendChild(pe);
+    }
+  }
+}
+
+function switchTab(phaseId,tabId){
+  tabs[phaseId]=tabId;
+  save(LS.TABS,tabs);
+  const col=COLORS[phaseId];
+  ['topics','projects','ai','mistakes'].forEach(t=>{
+    const el=document.getElementById(`tc-${t}-${phaseId}`);
+    const btn=document.getElementById(`tbtn-${phaseId}-${t}`);
+    if(el) el.style.display=t===tabId?'block':'none';
+    if(btn){ btn.classList.toggle('active',t===tabId); btn.style.color=t===tabId?col.c:''; }
+  });
+}
+
+function toggleTopic(key){
+  topicO[key]=!topicO[key];
+  save(LS.TOPICS,topicO);
+  const body=document.getElementById('tbody-'+key);
+  const chev=document.getElementById('tc-'+key);
+  if(body) body.style.display=topicO[key]?'block':'none';
+  if(chev) chev.style.transform=topicO[key]?'rotate(180deg)':'none';
+}
+
+function toggleJournalPhase(id){
+  opens['j_'+id]=!opens['j_'+id];
+  save(LS.OPEN,opens);
+  const body=document.getElementById('jbody-'+id);
+  const chev=document.getElementById('jchev-'+id);
+  if(body) body.classList.toggle('open',!!opens['j_'+id]);
+  if(chev) chev.style.transform=opens['j_'+id]?'rotate(180deg)':'none';
+}
+
+function saveNote(id){
+  const val=document.getElementById('jtxt-'+id).value;
+  notes[id]=val;
+  const now=new Date().toLocaleString('en-US',{dateStyle:'medium',timeStyle:'short'});
+  save(LS.NOTES,notes);
+  save('zihad_note_date_'+id,now);
+  const saved=document.getElementById('jsaved-'+id);
+  const date=document.getElementById('jdate-'+id);
+  if(saved){saved.classList.add('show');setTimeout(()=>saved.classList.remove('show'),2000);}
+  if(date) date.textContent='Last saved: '+now;
+}
+
+function clearNote(id){
+  if(confirm('Clear this note? This cannot be undone.')){
+    notes[id]='';
+    save(LS.NOTES,notes);
+    const txt=document.getElementById('jtxt-'+id);
+    if(txt) txt.value='';
+    const date=document.getElementById('jdate-'+id);
+    if(date) date.textContent='No notes yet.';
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// CELEBRATION POPUPS
+// ═══════════════════════════════════════════════════════════════════════
+
+const celebrationMessages = {
+  topic: [
+    { emoji: '🎯', text: 'Topic Mastered!' },
+    { emoji: '⚡', text: 'You Got This!' },
+    { emoji: '✨', text: 'Skills Unlocked!' },
+    { emoji: '🚀', text: 'Moving Forward!' },
+    { emoji: '💪', text: 'Progress Made!' },
+    { emoji: '🔥', text: 'Crushing It!' },
+    { emoji: '🎉', text: 'Excellent Work!' },
+    { emoji: '⭐', text: 'One Step Closer!' },
+  ],
+  project: [
+    { emoji: '🏆', text: 'Project Complete!' },
+    { emoji: '🎊', text: 'Portfolio Builder!' },
+    { emoji: '🚢', text: 'Shipped & Deployed!' },
+    { emoji: '💎', text: 'Masterpiece Done!' },
+    { emoji: '🌟', text: 'You Are Amazing!' },
+    { emoji: '🎯', text: 'Mission Accomplished!' },
+    { emoji: '🔝', text: 'Level Up!' },
+    { emoji: '👑', text: 'Developer Powers!' },
+  ]
+};
+
+function createParticles(count = 20) {
+  const container = document.createElement('div');
+  container.className = 'particles-container';
+  document.body.appendChild(container);
+  
+  const colors = ['#ef4444', '#3b82f6', '#0ea5e9', '#22c55e', '#f59e0b', '#ec4899', '#8b5cf6'];
+  
+  for (let i = 0; i < count; i++) {
+    const particle = document.createElement('div');
+    particle.className = 'particle';
+    
+    const color = colors[Math.floor(Math.random() * colors.length)];
+    const size = Math.random() * 8 + 3;
+    const x = Math.random() * window.innerWidth;
+    const y = window.innerHeight / 2;
+    const tx = (Math.random() - 0.5) * 200;
+    
+    particle.style.left = x + 'px';
+    particle.style.top = y + 'px';
+    particle.style.setProperty('--tx', tx + 'px');
+    particle.style.width = size + 'px';
+    particle.style.height = size + 'px';
+    particle.style.background = color;
+    particle.style.boxShadow = `0 0 ${size}px ${color}`;
+    
+    particle.style.animation = `particleFloat ${2.5 + Math.random() * 0.5}s ease-out forwards`;
+    particle.style.animationDelay = (Math.random() * 0.3) + 's';
+    
+    container.appendChild(particle);
+  }
+  
+  setTimeout(() => container.remove(), 3500);
+}
+
+function getCompletionStats() {
+  const totalTopics = Object.values(topicDone).filter(v => v).length;
+  const totalProjects = Object.values(projDone).filter(v => v).length;
+  const totalCompleted = totalTopics + totalProjects;
+  
+  return { totalTopics, totalProjects, totalCompleted };
+}
+
+function getAchievementLevel(completed) {
+  if (completed >= 50) return '🏅 Legend';
+  if (completed >= 30) return '👑 Master';
+  if (completed >= 20) return '⭐ Expert';
+  if (completed >= 10) return '🔥 Advanced';
+  if (completed >= 5) return '⚡ Intermediate';
+  return '🌱 Beginner';
+}
+
+function showCompletionPopup(type, itemName) {
+  const messages = celebrationMessages[type] || celebrationMessages.topic;
+  const message = messages[Math.floor(Math.random() * messages.length)];
+  const stats = getCompletionStats();
+  const achievementLevel = getAchievementLevel(stats.totalCompleted);
+  
+  // Create particles effect
+  createParticles(25);
+  
+  const popup = document.createElement('div');
+  popup.className = `celebration-popup ${type}`;
+  popup.innerHTML = `
+    <div class="emoji">${message.emoji}</div>
+    <div class="title">${message.text}</div>
+    <div class="item-name">📍 ${itemName}</div>
+    <div class="achievement-meta">
+      <span><span class="badge">${stats.totalTopics}</span> Topics</span>
+      <span><span class="badge">${stats.totalProjects}</span> Projects</span>
+      <span>${achievementLevel}</span>
+    </div>
+  `;
+  
+  document.body.appendChild(popup);
+  
+  setTimeout(() => popup.remove(), 3700);
+}
+
+function saveJourney(){
+  const val=document.getElementById('journey-textarea').value;
+  save(LS.JOURNEY,val);
+  const now=new Date().toLocaleString('en-US',{dateStyle:'medium',timeStyle:'short'});
+  save('zihad_journey_date',now);
+  const saved=document.getElementById('journey-saved');
+  const date=document.getElementById('journey-date');
+  if(saved){saved.style.opacity='1';setTimeout(()=>saved.style.opacity='0',2000);}
+  if(date) date.textContent='Saved at '+now;
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// SCROLL ANIMATIONS
+// ═══════════════════════════════════════════════════════════════════════
+
+function observeRows(){
+  const observer=new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){ entry.target.classList.add('visible'); observer.unobserve(entry.target); }
+    });
+  },{threshold:0.05,rootMargin:'0px 0px -30px 0px'});
+  document.querySelectorAll('.phase-row,.milestone').forEach((el,i)=>{
+    el.style.transitionDelay=(i%2===0?0:0.06)+'s';
+    if(!el.classList.contains('visible')) observer.observe(el);
+  });
+}
+
+// ══════════════════════════════════════════════╕�═════════════
+// INIT
+// ═══════════════════════════════════════════════════════════════════════
+
+function init(){
+  document.getElementById('phases-root').innerHTML=PHASES.map(p=>renderPhase(p)).join('');
+  renderAITools(); renderAIHabits(); renderCareer(); renderWarnings(); renderJournal();
+  buildProgressPhases(); updateProgress();
+  const journey=load(LS.JOURNEY,'');
+  if(journey) document.getElementById('journey-textarea').value=journey;
+  const jDate=load('zihad_journey_date','');
+  if(jDate) document.getElementById('journey-date').textContent='Saved at '+jDate;
+  observeRows();
+}
+
+document.addEventListener('DOMContentLoaded',init);
+
+// ═══════════════════════════════════════════════════════════════════════
+// FLOATING ASTEROIDS ANIMATION
+// ═══════════════════════════════════════════════════════════════════════
+(function() {
+  const canvas = document.createElement('canvas');
+  canvas.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;z-index:0.5;pointer-events:none;';
+  document.body.appendChild(canvas);
+  const ctx = canvas.getContext('2d', { alpha: true });
+
+  let width, height;
+  let particles = [];
+
+  function resize() {
+    width = canvas.width = window.innerWidth;
+    height = canvas.height = window.innerHeight;
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  class Asteroid {
+    constructor() {
+      this.reset(true);
+    }
+    reset(initial = false) {
+      this.size = Math.random() * 3 + 1.5;
+      this.x = initial ? Math.random() * width : Math.random() * width;
+      this.y = initial ? Math.random() * height : -20;
+      this.vx = (Math.random() - 0.5) * 0.4;
+      this.vy = -(Math.random() * 0.2 + 0.1);
+      this.rot = Math.random() * Math.PI * 2;
+      this.rotSpeed = (Math.random() - 0.5) * 0.02;
+      this.opacity = Math.random() * 0.5 + 0.2;
+      this.verts = Math.floor(Math.random() * 3) + 5;
+      this.radii = [];
+      for (let i = 0; i < this.verts; i++) {
+        this.radii.push(this.size * (Math.random() * 0.6 + 0.4));
+      }
+    }
+    update() {
+      this.x += this.vx;
+      this.y += this.vy;
+      this.rot += this.rotSpeed;
+      if (this.y < -20 || this.x < -20 || this.x > width + 20) {
+        this.reset();
+      }
+    }
+    draw() {
+      ctx.save();
+      ctx.translate(this.x, this.y);
+      ctx.rotate(this.rot);
+      ctx.beginPath();
+      for (let i = 0; i < this.verts; i++) {
+        const angle = (i / this.verts) * Math.PI * 2;
+        const r = this.radii[i];
+        const px = Math.cos(angle) * r;
+        const py = Math.sin(angle) * r;
+        if (i === 0) ctx.moveTo(px, py);
+        else ctx.lineTo(px, py);
+      }
+      ctx.closePath();
+      ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
+      ctx.fill();
+      ctx.strokeStyle = `rgba(255, 255, 255, ${this.opacity * 0.6})`;
+      ctx.lineWidth = 0.5;
+      ctx.stroke();
+      ctx.restore();
+    }
+  }
+
+  for (let i = 0; i < 35; i++) particles.push(new Asteroid());
+
+  function animate() {
+    ctx.clearRect(0, 0, width, height);
+    particles.forEach(p => { p.update(); p.draw(); });
+    requestAnimationFrame(animate);
+  }
+  animate();
+})();
+
+// Asteroid Geometry Connector System
+(function() {
+  const container = document.getElementById('asteroids-container');
+  const connectorsSVG = document.getElementById('connectors');
+  const asteroids = container.querySelectorAll('.asteroid');
+  
+  const asteroidsData = Array.from(asteroids).map((el, idx) => ({
+    index: idx,
+    el: el,
+    x: 0,
+    y: 0,
+    updatePos() {
+      const rect = this.el.getBoundingClientRect();
+      this.x = rect.left + rect.width / 2;
+      this.y = rect.top + rect.height / 2;
+    }
+  }));
+
+  function drawConnectors() {
+    connectorsSVG.innerHTML = '';
+    asteroidsData.forEach(a => a.updatePos());
+    
+    // Randomly connect asteroids with geometry
+    for (let i = 0; i < asteroidsData.length; i++) {
+      const numConnections = Math.floor(Math.random() * 3) + 1;
+      for (let j = 0; j < numConnections; j++) {
+        const targetIdx = Math.floor(Math.random() * asteroidsData.length);
+        if (targetIdx !== i) {
+          const source = asteroidsData[i];
+          const target = asteroidsData[targetIdx];
+          
+          const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+          line.setAttribute('x1', source.x);
+          line.setAttribute('y1', source.y);
+          line.setAttribute('x2', target.x);
+          line.setAttribute('y2', target.y);
+          line.setAttribute('stroke', `rgba(255,255,255,${Math.random() * 0.25 + 0.05})`);
+          line.setAttribute('stroke-width', '0.8');
+          connectorsSVG.appendChild(line);
+        }
+      }
+    }
+  }
+
+  // Redraw connectors periodically
+  drawConnectors();
+  setInterval(drawConnectors, 3000);
+  window.addEventListener('resize', drawConnectors);
+})();
+</script>
+</body>
+</html>
